@@ -25,7 +25,7 @@ int main(void){
     Nhap1chieu(p,n);
     Xuat1chieu(numb,n); 
 //----------------------------------------------------------------------------------------------
-    // Con tro va mang 2 chieu
+    // Con tro va machiều
 //-----------------------------------------------------------------------------------------
     //Cách 1:
     // Sử dụng hàm malloc để cấp phát bộ nhớ và free để giải phóng bộ nhớ (ở trong thư viện stdliib.h)
