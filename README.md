@@ -1,5 +1,5 @@
-# Nhom_CTDL
-## Thanh Vien
+# Nhóm CTDL
+## Thành Viên
 20237295	Phạm Tiến Anh
 
 20237298	Trần Lương Anh
