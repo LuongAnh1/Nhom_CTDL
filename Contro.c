@@ -70,5 +70,5 @@ int main(void){
     }
     // Giải phóng bộ nhớ
     free(numb2);
-    return 0;
+    return 00;
 }
