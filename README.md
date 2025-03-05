@@ -4,7 +4,9 @@
 
 20237298	Trần Lương Anh
 
-20237351	Đinh Công Khang
+20237351	[Đinh Công Khang](https://github.com/DinhCongKhang2005)
 
-20237428	Ngụy Phan Hoàng Dương
+20237428	[Ngụy Phan Hoàng Dương](https://github.com/dugonn)
 ## Phần mềm sử dụng: Visual Studio Code
+## Phần mềm hỗ trợ thêm: GitHub Desktop
+## 
