@@ -9,4 +9,5 @@
 20237428	[Ngụy Phan Hoàng Dương](https://github.com/dugonn)
 ## Phần mềm sử dụng: Visual Studio Code
 ## Phần mềm hỗ trợ thêm: GitHub Desktop
-## 
+## Lưu ý
+Không làm việc trên nhánh chính (main) 🙈
