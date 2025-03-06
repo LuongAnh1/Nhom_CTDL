@@ -17,7 +17,7 @@ void Nhap2chieu(int *a, int x, int y){
             scanf("%d",a+i*y+j);
 }
 int main(void){
-    // Con trỏ và mảng 1 chiều
+    // Con trỏ và mảng 1 chiề
     int n,*p;
     scanf("%d",&n);
     int numb[n];
