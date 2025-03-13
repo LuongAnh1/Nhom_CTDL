@@ -11,3 +11,9 @@
 ## Phần mềm hỗ trợ thêm: GitHub Desktop
 ## Lưu ý
 Không làm việc trên nhánh chính (main) 🙈
+## Chaỵ file C trực tiếp trên nhánh bằng Visual (ko cần tải file hoặcoặc copy)
+Vào OUTPUT
+
+Chọn thanh tùy chọn => GitHub
+
+Về lại Terminal => Run C/C++ File
