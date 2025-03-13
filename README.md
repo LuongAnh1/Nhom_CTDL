@@ -11,7 +11,7 @@
 ## Phần mềm hỗ trợ thêm: GitHub Desktop
 ## Lưu ý
 Không làm việc trên nhánh chính (main) 🙈
-## Chaỵ file C trực tiếp trên nhánh bằng Visual (ko cần tải file hoặcoặc copy)
+## Chaỵ file C trực tiếp trên nhánh bằng Visual (ko cần tải file hoặc copy)
 Vào OUTPUT
 
 ![image](https://github.com/user-attachments/assets/c98671bb-5190-4673-b919-1fbf2f301f1f)
