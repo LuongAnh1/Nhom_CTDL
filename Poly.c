@@ -15,6 +15,39 @@ void In(Polynom *Poly){
     }
     printf("\n");
 }
+Polynom* Sap_Xep(Polynom *Poly){
+    Polynom *cur = Poly;
+    while(cur != NULL){
+        Polynom *temp = cur->link;
+        while(temp != NULL){
+            if(cur->expon < temp->expon){
+                int t = cur->expon;
+                cur->expon = temp->expon;
+                temp->expon = t;
+                t = cur->coef;
+                cur->coef = temp->coef;
+                temp->coef = t;
+            }
+            temp = temp->link;
+        }
+        cur = cur->link;
+    }
+    return Poly;
+}
+Polynom* Don_Gt(Polynom *Poly){
+    Polynom *cur=Poly;
+    while(cur->link != NULL){
+        if(cur->link->expon == cur->expon){
+            cur->coef += cur->link->coef;
+            Polynom *temp = cur->link;
+            cur->link = cur->link->link;
+            free(temp);
+        }
+        else
+            cur = cur->link;
+    }
+    return Poly;
+}
 Polynom* PolyMutl(Polynom *Poly1, Polynom *Poly2){
     Polynom *Poly3 = (Polynom*)malloc(sizeof(Polynom));
     Polynom *cur1 = Poly1, *cur2, *cur3;
@@ -33,38 +66,16 @@ Polynom* PolyMutl(Polynom *Poly1, Polynom *Poly2){
                 newNode->coef = cur1->coef * cur2->coef;
                 newNode->expon = cur1->expon + cur2->expon;
                 newNode->link = NULL;
-                if (newNode->expon == cur3->expon)
-                    cur3->coef += newNode->coef;
-                else if(newNode->expon < cur3->expon){
-                    cur3->link = newNode;
-                    cur3 = newNode;
-                }
-                else{
-                    Polynom *temp = Poly3;
-                    while(newNode->expon < temp->expon)
-                        temp = temp->link;
-                    if(temp->expon == newNode->expon)
-                        temp->coef += newNode->coef;
-                    else{
-                        if(temp == Poly3){
-                            newNode->link = temp;
-                            Poly3 = newNode;
-                        }
-                        else{
-                            Polynom *temp0 = Poly3;
-                            while(temp0->link != temp && temp0->link != NULL)
-                                temp0 = temp0->link;
-                            newNode->link = temp;
-                            temp0->link = newNode;
-                        }
-                    }
-                }
+                cur3->link = newNode;
+                cur3 = newNode;
             }
             cur2 = cur2->link;
             k++;
         }
         cur1 = cur1->link;
     }
+    Sap_Xep(Poly3);
+    Don_Gt(Poly3);
     return Poly3;
 }
 Polynom* Nhap(Polynom *Poly){
