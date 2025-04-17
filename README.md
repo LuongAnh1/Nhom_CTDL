@@ -13,7 +13,8 @@
 Không làm việc trên nhánh chính (main) 🙈
 # Xây dựng chương trình: Theo hướng modul hóa
 - Các file .h: dạng thư viện cung cấp hàm cho toàn hệ thống sử dụng
-- .c: định nghĩa hàm hoặc file nguồn (main.c)
+- Các file .c: định nghĩa hàm hoặc file nguồn (main.c)
+- Các file .csv: lưu thông tin (các loại sách, khách hàng, hàng đợi,...)
 ## Các file .h
 - Data.h: định nghĩa kiểu dữ liệu
 - hase.h: Hàm băm
