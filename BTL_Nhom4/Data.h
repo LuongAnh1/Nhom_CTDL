@@ -1,5 +1,6 @@
-#ifndef DATA_h
-#define DATA_h
+#ifndef DATA_H
+#define DATA_H
+#include <stdio.h>
 #define TABLE_SIZE 10
 
 struct Book{
@@ -12,6 +13,9 @@ struct Node{
     struct Node *left, *right;
 };
 typedef struct Node Node;
-Node *Table[TABLE_SIZE]; // Bảng băm
+extern Node *Table[TABLE_SIZE]; 
+// Bảng băm, biến toàn cục - chỉ được định nghĩa 1 lần duy nhất 
+// đang được định nghĩa trong hàm main.c
+
 
 #endif
