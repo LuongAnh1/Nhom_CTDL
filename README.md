@@ -11,15 +11,10 @@
 ## Phần mềm hỗ trợ thêm: GitHub Desktop
 ## Lưu ý
 Không làm việc trên nhánh chính (main) 🙈
-## Chaỵ file C trực tiếp trên nhánh bằng Visual (ko cần tải file hoặc copy)
-Vào OUTPUT
-
-![image](https://github.com/user-attachments/assets/c98671bb-5190-4673-b919-1fbf2f301f1f)
-
-Chọn thanh tùy chọn => GitHub
-
-![image](https://github.com/user-attachments/assets/0eb285a4-7346-4a7f-abe1-0edc13a4ba7e)
-
-Về lại Terminal => Run C/C++ File
-
-![image](https://github.com/user-attachments/assets/ff1a2d06-f793-4cbc-82b0-69649a6512d7)
+# Xây dựng chương trình: Theo hướng modul hóa
+- Các file .h: dạng thư viện cung cấp hàm cho toàn hệ thống sử dụng
+- Các file .c: định nghĩa hàm hoặc file nguồn (main.c)
+- Các file .csv: lưu thông tin (các loại sách, khách hàng, hàng đợi,...)
+## Các file .h
+- Data.h: định nghĩa kiểu dữ liệu
+- hase.h: Hàm băm
