@@ -1,11 +1,11 @@
 #include "AVL_Tree.h"
 
-void AVLTreeInsert(int k){
-    if (k==1) 
+AVLNode* insertAVL(AVLNode* root, void *data, CompareFunction cmp){
+    
 }
-void AVLTreeDelete(int k){
+AVLNode* deleteAVL(AVLNode* root, void *data, CompareFunction cmp){
 
 }
-void AVLTreeSearch(int k){
+AVLNode* searchAVL(AVLNode* root, void *data, CompareFunction cmp){
 
 }

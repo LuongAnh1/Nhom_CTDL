@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "Data.h"
 
-// Khai báo bảng băm toàn cục
+// định nghĩa biến toàn cục
 AVLNode *HashTableBook[TABLE_SIZE] = {NULL};
 AVLNode *HashTableMember[TABLE_SIZE] = {NULL};
 AVLNode *HashTableBorrowing[TABLE_SIZE] = {NULL};
