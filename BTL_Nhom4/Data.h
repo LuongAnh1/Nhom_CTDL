@@ -22,6 +22,13 @@ typedef struct Member Member;
 struct Borrowing{
     char Code[6], IdentifyID[12], Tittle[100], Author[100];
     struct tm Start;
+    // Ví dụ về cách sử dụng struct tm để lưu trữ thời gian
+    // struct tm *local;
+    // time_t t;
+    // t = time(NULL); // Lấy thời gian hiện tại
+    // local = localtime(&t); // Chuyển đổi sang cấu trúc tm
+    // printf("Thoi gian hien tai: %02d:%02d:%02d\n", local->tm_hour, local->tm_min, local->tm_sec);
+    // printf("Ngay hien tai: %02d/%02d/%04d\n", local->tm_mday, local->tm_mon + 1, local->tm_year + 1900);
 };
 typedef struct Borrowing Borrowing;
 // Cấu trúc Borrowing - dùng để lưu trữ thông tin mượn sách
