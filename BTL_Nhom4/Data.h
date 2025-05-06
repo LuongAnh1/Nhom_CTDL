@@ -45,31 +45,13 @@ typedef struct Queue Queue;
 // Bảng băm, biến toàn cục - chỉ được định nghĩa 1 lần duy nhất 
 // đang được định nghĩa trong hàm main.c
 // Bảng băm này sẽ được sử dụng để lưu trữ thông tin sách
-struct AVLBook{
-    Book data;
-    char key[200];
-    struct AVLBook *left, *right;
-    int height;
-    Queue *head;
-};
-typedef struct AVLBook AVLBook;
-extern AVLBook *HashTableBook[TABLE_SIZE]; 
-
-// Bảng băm này sẽ được sử dụng để lưu trữ thông tin thành viên
-struct AVLMember{
-    Member data;
-    struct AVLMember *left, *right;
+struct AVLNode{
+    void *data;
+    struct AVLNode *left, *right;
     int height;
 };
-typedef struct AVLMember AVLMember;
-extern AVLMember *HashTableMember[TABLE_SIZE];
+typedef struct AVLNode AVLNode;
 
-// Bảng băm này sẽ được sử dụng để lưu trữ thông tin mượn sách
-struct AVLBorrowing{
-    Borrowing data;
-    struct AVLBorrowing *left, *right;
-    int height;
-}; 
-typedef struct AVLBorrowing AVLBorrowing;
-extern AVLBorrowing *HashTableBorrowing[TABLE_SIZE];
+typedef int (*CompareFunction)(void*, void*);
+
 #endif
