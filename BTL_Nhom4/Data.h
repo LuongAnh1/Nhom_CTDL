@@ -6,7 +6,7 @@
 
 // Dinh nghia cau truc cac doi tuongtuong
 struct Book{
-    char Title[100], Author[100];
+    char Title[100], Author[100], key[201];
     int Quantity;   
 };
 typedef struct Book Book;

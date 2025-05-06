@@ -13,6 +13,7 @@ AVLNode *HashTableBorrowing[TABLE_SIZE] = {NULL};
 int compareString(void *a, void *b) {
     return strcmp((char *)a, (char *)b);
 }
+// Chỗ này cần có thêm hàm xử lý xâu để so sánh, với Book thì key = <Title>_<Author>
 int main() {
     // Xóa AVL sẽ tuyf trường hợp của bảng băm -> hàm deleteAVL không cần 
     //-> sử dụng hàm searchAVL để xử lý với tùy bảng băm
