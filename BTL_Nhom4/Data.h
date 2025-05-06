@@ -6,7 +6,7 @@
 
 // Dinh nghia cau truc cac doi tuongtuong
 struct Book{
-    char Tittle[100], Author[100];
+    char Title[100], Author[100];
     int Quantity;   
 };
 typedef struct Book Book;
@@ -20,7 +20,7 @@ typedef struct Member Member;
 // Cấu trúc Member - dùng để lưu trữ thông tin thành viên
 
 struct Borrowing{
-    char Code[6], IdentifyID[12], Tittle[100], Author[100];
+    char Code[6], IdentifyID[12], Title[100], Author[100];
     struct tm Start;
     // Ví dụ về cách sử dụng struct tm để lưu trữ thời gian
     // struct tm *local;
@@ -34,7 +34,7 @@ typedef struct Borrowing Borrowing;
 // Cấu trúc Borrowing - dùng để lưu trữ thông tin mượn sách
 
 struct Queue{
-    char IdentifyID[12], Tittle[100], Author[100];
+    char IdentifyID[12], Title[100], Author[100];
     int Order;
 };
 typedef struct Queue Queue;
@@ -42,9 +42,7 @@ typedef struct Queue Queue;
 
 /*----------------------------------------------------------------------------------------*/
 
-// Bảng băm, biến toàn cục - chỉ được định nghĩa 1 lần duy nhất 
-// đang được định nghĩa trong hàm main.c
-// Bảng băm này sẽ được sử dụng để lưu trữ thông tin sách
+//Cấu trúc cây AVL tổng quát
 struct AVLNode{
     void *data;
     struct AVLNode *left, *right;
@@ -52,6 +50,9 @@ struct AVLNode{
 };
 typedef struct AVLNode AVLNode;
 
-typedef int (*CompareFunction)(void*, void*);
+// Khai báo biến toàn cục cho bảng băm, được định nghĩa ở main.c
+extern AVLNode *HashTableBook[TABLE_SIZE];
+extern AVLNode *HashTableMember[TABLE_SIZE];
+extern AVLNode *HashTableBorrowing[TABLE_SIZE];
 
 #endif
