@@ -60,20 +60,17 @@ int max(int a, int b) {
     return (a > b) ? a : b;
 }
 AVLNode* insertAVL(AVLNode* root, void *data, CompareFunction cmp){
-    // Kiểm tra xem cây có nút chưachưa
-    if (root == NULL) {
+    // Kiểm tra xem cây có nút chưa
+    if (root == NULL) 
         return createNode(data); // Tạo nút mới nếu cây rỗng
-    }
 
     // Đưa cây vào đúng vị trí dựa trên giá trị của dữ liệu
-    if (cmp(data, root->data) < 0) {
+    if (cmp(data, root->data) < 0)
         root->left = insertAVL(root->left, data, cmp);
-    } else if (cmp(data, root->data) > 0) {
+    else if (cmp(data, root->data) > 0) 
         root->right = insertAVL(root->right, data, cmp);
-    } else {
-        // Nếu dữ liệu đã tồn tại trong cây, trả về vị trí hiện tại
+    else // Nếu dữ liệu đã tồn tại trong cây, trả về vị trí hiện tại
         return root;
-    }
 
     // Cập nhật chiều cao của nút cha
     root->height = 1 + max(getHeight(root->left), getHeight(root->right));
