@@ -4,7 +4,7 @@
 #include <time.h>
 #define TABLE_SIZE 10
 
-// Dinh nghia cau truc cac doi tuongtuong
+// Định nghĩa cấu trúc đối tượng 
 struct Book{
     char Title[100], Author[100], key[201];
     int Quantity;   
@@ -44,15 +44,15 @@ typedef struct Queue Queue;
 
 //Cấu trúc cây AVL tổng quát
 struct AVLNode{
-    void *data;
-    struct AVLNode *left, *right;
-    int height;
+    void *data; // Dữ liệu của nút tự định nghĩa kiểu dữ liệu
+    struct AVLNode *left, *right; // Con trái và con phải của nút
+    int height; // Chiều cao của nút
 };
 typedef struct AVLNode AVLNode;
 
 // Khai báo biến toàn cục cho bảng băm, được định nghĩa ở main.c
-extern AVLNode *HashTableBook[TABLE_SIZE];
-extern AVLNode *HashTableMember[TABLE_SIZE];
-extern AVLNode *HashTableBorrowing[TABLE_SIZE];
+extern AVLNode *HashTableBook[TABLE_SIZE]; // Bảng băm cho sách
+extern AVLNode *HashTableMember[TABLE_SIZE]; // Bảng băm cho thành viên
+extern AVLNode *HashTableBorrowing[TABLE_SIZE]; // Bảng băm cho thông tin mượn sách
 
 #endif
