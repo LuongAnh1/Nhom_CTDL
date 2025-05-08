@@ -1,5 +1,16 @@
 #include "AVL_Tree.h"
 
+// Hàm lấy chiều cao của nút
+int getHeight(AVLNode* node) {
+    if (node == NULL) {
+        return 0;
+    }
+    return node->height;
+}
+// Hàm so sánh 2 số nguyên
+int max(int a, int b) {
+    return (a > b) ? a : b;
+}
 // Tạo nút mới cho cây AVL
 AVLNode* createNode(void *data) {
     AVLNode* newNode = (AVLNode*)malloc(sizeof(AVLNode));
@@ -41,23 +52,12 @@ AVLNode* leftRotate(AVLNode* x) {
     // Trả về nút mới làm gốc
     return y;
 }
-// Hàm lấy chiều cao của nút
-int getHeight(AVLNode* node) {
-    if (node == NULL) {
-        return 0;
-    }
-    return node->height;
-}
 // Hàm lấy độ cân bằng của nút
 int getBalance(AVLNode* node) {
     if (node == NULL) {
         return 0;
     }
     return getHeight(node->left) - getHeight(node->right);
-}
-// Hàm so sánh 2 số nguyên
-int max(int a, int b) {
-    return (a > b) ? a : b;
 }
 AVLNode* insertAVL(AVLNode* root, void *data, CompareFunction cmp){
     // Kiểm tra xem cây có nút chưa
