@@ -59,6 +59,39 @@ int getBalance(AVLNode* node) {
     }
     return getHeight(node->left) - getHeight(node->right);
 }
+AVLNode* Balance(AVLNode* node) {
+    // Cập nhật chiều cao của nút
+    node->height = 1 + max(getHeight(node->left), getHeight(node->right));
+
+    // Tính toán độ cân bằng của nút
+    int balance = getBalance(node);
+
+    // Nếu nút mất cân bằng, có 4 trường hợp
+
+    // Left Left Case
+    if (balance > 1 && getBalance(node->left) >= 0) {
+        return rightRotate(node);
+    }
+
+    // Right Right Case
+    if (balance < -1 && getBalance(node->right) <= 0) {
+        return leftRotate(node);
+    }
+
+    // Left Right Case
+    if (balance > 1 && getBalance(node->left) < 0) {
+        node->left = leftRotate(node->left);
+        return rightRotate(node);
+    }
+
+    // Right Left Case
+    if (balance < -1 && getBalance(node->right) > 0) {
+        node->right = rightRotate(node->right);
+        return leftRotate(node);
+    }
+
+    return node; // Trả về con trỏ gốc của cây đã được cân bằng
+}
 AVLNode* insertAVL(AVLNode* root, void *data, CompareFunction cmp){
     // Kiểm tra xem cây có nút chưa
     if (root == NULL) 
@@ -71,38 +104,7 @@ AVLNode* insertAVL(AVLNode* root, void *data, CompareFunction cmp){
         root->right = insertAVL(root->right, data, cmp);
     else // Nếu dữ liệu đã tồn tại trong cây, trả về vị trí hiện tại
         return root;
-
-    // Cập nhật chiều cao của nút cha
-    root->height = 1 + max(getHeight(root->left), getHeight(root->right));
-
-    // Tính toán độ cân bằng của nút cha để kiểm tra xem có cần cân bằng lại không
-    int balance = getBalance(root);
-
-    // Nếu nút mất cân bằng, có 4 trường hợp
-
-    // Left Left Case
-    if (balance > 1 && cmp(data, root->left->data) < 0) {
-        return rightRotate(root);
-    }
-
-    // Right Right Case
-    if (balance < -1 && cmp(data, root->right->data) > 0) {
-        return leftRotate(root);
-    }
-
-    // Left Right Case
-    if (balance > 1 && cmp(data, root->left->data) > 0) {
-        root->left = leftRotate(root->left);
-        return rightRotate(root);
-    }
-
-    // Right Left Case
-    if (balance < -1 && cmp(data, root->right->data) < 0) {
-        root->right = rightRotate(root->right);
-        return leftRotate(root);
-    }
-
-    return root; // Trả về con trỏ gốc của cây đã được cân bằng
+    return Balance(root); // Cân bằng lại cây sau khi đã thêm nút mới
 }
 AVLNode* searchAVL(AVLNode* root, void *data, CompareFunction cmp){
     if (root == NULL || cmp(data, root->data) == 0) {
@@ -116,4 +118,58 @@ AVLNode* searchAVL(AVLNode* root, void *data, CompareFunction cmp){
 
     // Nếu dữ liệu lớn hơn nút hiện tại, tìm kiếm trong cây con bên phải
     return searchAVL(root->right, data, cmp);
+}
+AVLNode* minValueNode(AVLNode* node) {
+    AVLNode* current = node;
+
+    // Tìm nút có giá trị nhỏ nhất trong cây con bên trái
+    while (current->left != NULL) {
+        current = current->left;
+    }
+    return current;
+}
+AVLNode* deleteAVL(AVLNode* root, void *data, CompareFunction cmp) {
+    // Nếu cây rỗng, trả về NULL
+    if (root == NULL) {
+        return root;
+    }
+
+    // Tìm vị trí của nút cần xóa
+    if (cmp(data, root->data) < 0) {
+        root->left = deleteAVL(root->left, data, cmp);
+    } else if (cmp(data, root->data) > 0) {
+        root->right = deleteAVL(root->right, data, cmp);
+    } else {
+        // Nút cần xóa được tìm thấy
+        if ((root->left == NULL) || (root->right == NULL)) {
+            AVLNode* temp = root->left ? root->left : root->right;
+
+            // Nếu không có con nào (nút là lá), gán NULL cho nút hiện tại
+            if (temp == NULL) {
+                temp = root;
+                root = NULL;
+            } else { // Nếu có một con, gán con đó cho nút hiện tại
+                *root = *temp; // Sao chép nội dung của nút con vào nút hiện tại
+            }
+            free(temp); // Giải phóng bộ nhớ của nút đã xóa
+        } else {
+            // Nút có hai con: tìm giá trị nhỏ nhất trong cây con bên phải
+            // bằng cách xét nút con bên phải và timg nút con nhỏ nhất bên tráitrái
+            AVLNode* temp = minValueNode(root->right);
+
+            // Sao chép giá trị nhỏ nhất vào nút hiện tại
+            root->data = temp->data;
+
+            // Xóa nút nhỏ nhất trong cây con bên phải (gọi lại hàm đệ quy -> vị trí xóa là vị trí của nút nhỏ nhất)
+            // -> cân bằng lại cây từ nút nhỏ nhất của cây con bên phải
+            root->right = deleteAVL(root->right, temp->data, cmp);
+        }
+    }
+
+    // Nếu cây chỉ còn một nút hoặc rỗng, trả về NULL
+    if (root == NULL) {
+        return root;
+    }
+
+    return Balance(root); // Cân bằng lại cây sau khi đã xóa nút
 }
