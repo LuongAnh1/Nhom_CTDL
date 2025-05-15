@@ -3,14 +3,15 @@
 #include <ctype.h>
 #include <stdio.h>
 
-AVLNode *HashtableBook[TABLE_SIZE];
-
+//hàm chuyển về các ký tự thường
 void tolowerCase(char *str){
     for(int i = 0; str[i]; i++){
         str[i] = tolower(str[i]);
     }
 }
 
+
+//đọc dữ liệu từ file csv
 void loadBooksFromFile(const char *fileName){
     FILE *file = fopen(fileName, "r");
 
@@ -24,38 +25,48 @@ void loadBooksFromFile(const char *fileName){
         Book book;
         char *token;
 
+        //xử lí ký tự thừa 
         line[strcspn(line, "\n")] = '\0';
 
+        //tách title
         token = strtok(line, ",");
         if(token) strncpy(book.Title, token, sizeof(book.Title));
         else continue;
 
+        //tách author
         token = strtok(NULL, ",");
         if(token) strncpy(book.Author, token, sizeof(book.Author));
         else continue;
 
+        //tách quantity
         token = strtok(NULL, ",");
         if(token) book.Quantity = atoi(token);
         else continue;
 
+        //đặt key và chuẩn hóa cho key
         strncpy(book.Key, book.Title, sizeof(book.Key));
         strncat(book.Key, "_", sizeof(book.Key) - strlen(book.Key) - 1);
         strncat(book.Key, book.Author, sizeof(book.Key) - strlen(book.Key) - 1);
 
+        //chuẩn hóa các thông tin
         tolowerCase(book.Key);
         tolowerCase(book.Title);
         tolowerCase(book.Author);
 
+        //kết thúc xâu
         book.Key[sizeof(book.Key) - 1] = '\0';
         book.Title[sizeof(book.Title) - 1] = '\0';
         book.Author[sizeof(book.Author) - 1] = '\0';
 
+        //chèn sách
         insertBook(book);
     }
 
     fclose(file);
 }
 
+
+//tạo key từ title và author: title_author
 void generateKey(char *key, const char *title, cosnt char *author){
     char t[100], a[100];
     strncpy(t, title, sizeof(t));
@@ -68,6 +79,7 @@ void generateKey(char *key, const char *title, cosnt char *author){
     snprintf(key, 201, %s_%s, t, a);
 }
 
+//hàm hash
 int hashFunction(const char *key){
     unsigned long hash  = 5381;
     int c;
@@ -78,39 +90,48 @@ int hashFunction(const char *key){
     return hash % TABLE_SIZE;
 }
 
+//hàm so sánh book
 int compareBook(void *a, void *b){
     return strcmp(((Book*)a)->key, ((Book*)b)->key);
 }
 
+//chèn sách vào AVL
 void insertBook(Book book){
     generateKey(book.Key, book.Title, book.Author);
     int index = hashFunction(book.Key);
     HashTableBook[index] = insertAVL(HashTableBook[index], &book, compareBook);
 }
 
+//tìm kiêm sách 
 Book* searchBook(const char *title, const char *author){
     char key[100];
     generateKey(book.Key, book.Title, book.Author);
+    //lấy vị trí
     int index = hashFunction(key);
 
     Book tmp;
     strcpy(tmp.Key, key);
+    //tìm kiếm trong AVLTree
     AVLNode *found = searchAVL(HashtableBook[index], &temp, compareBook);
     if(found) return (Book*)found->data;
 
     return NULL;
 }
 
+//xóa sách khỏi AVL Tree
 void deleteBook(const char *title, const char *author){
     char key[100];
     generateKey(key, title, author);
+    //lấy vị trí
     int index = hashFunction(key);
 
     Book tmp;
     strcmp(tmp.Key, key);
+    //xóa
     HashTableBook[index] = deleteAVL(HashTableBook[index], &tmp, compareBook);
 }
 
+//hàm hiển thị thông tin của sách
 void displayBook(AVLNode *root){
     if(!root){
         return;
@@ -122,6 +143,7 @@ void displayBook(AVLNode *root){
     displayBook(root->right);
 }
 
+//hàm hiển thị toàn bộ thông tin sách của thư viện
 void displayAllBooks(){
     for(int i = 0; i < TABLE_SIZE; i++){
         if(HashTableBook[i]){
