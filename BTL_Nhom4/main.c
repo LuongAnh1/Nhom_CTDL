@@ -5,6 +5,7 @@
 #include "Data.h"
 #include "AVL_Tree.h"
 #include "Libarary_Service.h"
+#include "Member.h"
 
 /*
 Lưu ý khi kết nối các modul: 
@@ -15,13 +16,12 @@ gcc <Tên file>.c -o <Tên file>.exe -xc++ -lstdc++ -shared-libgcc
 AVLNode *HashTableBook[TABLE_SIZE] = {NULL};
 AVLNode *HashTableMember[TABLE_SIZE] = {NULL};
 AVLNode *HashTableBorrowing[TABLE_SIZE] = {NULL};
-// Hàm so sánh xâu
-int compareString(void *a, void *b) {
-    return strcmp((char *)a, (char *)b);
-}
+
 // Chỗ này cần có thêm hàm xử lý xâu để so sánh, với Book thì key = <Title>_<Author>
 int main() {
+    ReadMember("Member.csv");
     Option();
+    
     // Xóa AVL sẽ tùy trường hợp của bảng băm -> hàm deleteAVL không cần 
     //-> sử dụng hàm searchAVL để xử lý với tùy bảng băm
     /*
