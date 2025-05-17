@@ -8,6 +8,7 @@
 struct Book{
     char Title[100], Author[100], key[201];
     int Quantity;   
+    Queue* queue; // con trỏ queue để lưu trữ thông tin hàng đợi
 };
 typedef struct Book Book;
 // Cấu trúc Book - dùng để lưu trữ thông tin sách
@@ -35,7 +36,10 @@ typedef struct Borrowing Borrowing;
 
 struct Queue{
     char IdentifyID[12], Title[100], Author[100];
+    struct tm DecideBorrow; // Thời gian sách đã về và ấn định cho người này
+    // Nếu thời gian người này đến lấy sách trễ hơn thời gian này 3 ngày thì sẽ không được mượn sách
     int Order;
+    struct Queue *next; // con trỏ next để lưu trữ thông tin hàng đợi
 };
 typedef struct Queue Queue;
 // Cấu trúc queue - dùng để lưu trữ thông tin hàng đợi mượn sách
