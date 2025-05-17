@@ -8,3 +8,7 @@ unsigned int hash(char *str) {
     }
     return hash % TABLE_SIZE;
 }
+// Hàm so sánh xâu
+int compareString(void *a, void *b) {
+    return strcmp((char *)a, (char *)b);
+}

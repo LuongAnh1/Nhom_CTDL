@@ -15,10 +15,7 @@ gcc <Tên file>.c -o <Tên file>.exe -xc++ -lstdc++ -shared-libgcc
 AVLNode *HashTableBook[TABLE_SIZE] = {NULL};
 AVLNode *HashTableMember[TABLE_SIZE] = {NULL};
 AVLNode *HashTableBorrowing[TABLE_SIZE] = {NULL};
-// Hàm so sánh xâu
-int compareString(void *a, void *b) {
-    return strcmp((char *)a, (char *)b);
-}
+
 // Chỗ này cần có thêm hàm xử lý xâu để so sánh, với Book thì key = <Title>_<Author>
 int main() {
     Option();
