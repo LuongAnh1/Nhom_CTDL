@@ -3,8 +3,9 @@
 #include "Data.h"
 
 void inputMember(Member *newMember);
+void readMember(const char *filename);
 void addMember();
-void searchMember();    
+bool searchMember();    
 void deleteMember();
-
+void storeMember();
 #endif
