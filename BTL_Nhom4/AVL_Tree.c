@@ -102,7 +102,7 @@ AVLNode* insertAVL(AVLNode* root, void *data, CompareFunction cmp){
         root->left = insertAVL(root->left, data, cmp);
     else if (cmp(data, root->data) > 0) 
         root->right = insertAVL(root->right, data, cmp);
-    else // Nếu dữ liệu đã tồn tại trong cây, trả về vị trí hiện tại
+    else // Nếu dữ liệu đã tồn tại trong cây => không làm gì cả
         return root;
     return Balance(root); // Cân bằng lại cây sau khi đã thêm nút mới
 }
