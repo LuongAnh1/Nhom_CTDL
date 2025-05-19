@@ -2,6 +2,7 @@
 #define DATA_H
 #include <stdio.h>
 #include <time.h>
+#include <stdbool.h>
 #define TABLE_SIZE 10
 
 // Định nghĩa cấu trúc đối tượng 
@@ -38,7 +39,7 @@ struct Queue{
     char IdentifyID[12], Title[100], Author[100];
     struct tm DecideBorrow; // Thời gian sách đã về và ấn định cho người này
     // Nếu thời gian người này đến lấy sách trễ hơn thời gian này 3 ngày thì sẽ không được mượn sách
-    int Order;
+    bool Order; // Trạng thái ưu tiêntiên
     struct Queue *next; // con trỏ next để lưu trữ thông tin hàng đợi
 };
 typedef struct Queue Queue;
