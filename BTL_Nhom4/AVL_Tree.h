@@ -8,9 +8,9 @@ typedef int (*CompareFunction)(void*, void*);
 // void *data: dữ liệu cần thêm vào cây AVL - tự định nghĩa kiểu dữ liệu
 AVLNode* createNode(void *data); // Tạo nút mới trong cây AVL
 AVLNode* Balance(AVLNode* node); // Cân bằng lại cây AVL
-AVLNode* insertAVL(AVLNode* root, void *data, CompareFunction cmp);
-AVLNode* searchAVL(AVLNode* root, void *data, CompareFunction cmp);
+AVLNode* insertAVL(AVLNode* root, void *data, void *key, CompareFunction cmp);
+AVLNode* searchAVL(AAVLNode* root, void *key, CompareFunction cmp);
 AVLNode* minValueNode(AVLNode* node); // Tìm nút có giá trị nhỏ nhất trong cây con bên trái
-AVLNode* deleteAVL(AVLNode* root, void *data, CompareFunction cmp); // Xóa nút trong cây AVL
+AVLNode* deleteAVL(AVLNode* root, void *key, CompareFunction cmp); // Xóa nút trong cây AVL
 
 #endif
