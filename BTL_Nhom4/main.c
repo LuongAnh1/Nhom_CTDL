@@ -30,7 +30,7 @@ int main() {
     //-> sử dụng hàm searchAVL để xử lý với tùy bảng băm
     /*
     Thủ tục insertAVL 
-    insertAVL(<cây AVL>, <đối tượng>, <hàm so sánh>);
+    insertAVL(<cây AVL>, <đối tượng>, <khóa>, <hàm so sánh>);
     Nếu đối tượng đã tồn tại trong cây AVL thì sẽ trả về vị trí của nó trong cây
     Nếu không thì sẽ thêm vào cây AVL và trả về NULL
     Hàm so sánh hiện đang dùng chung hàm compareString
@@ -42,13 +42,13 @@ int main() {
     // strcpy(book->Author, "Brian W. Kernighan and Dennis M. Ritchie");
     // book->Quantity = 5;
     // Thêm sách vào bảng băm
-    // HashTableBook[0] = insertAVL(HashTableBook[0],book, compareString);
+    // HashTableBook[0] = insertAVL(HashTableBook[0], book, <key>, compareString);
 
     // -------------------------------------------------------------------------
 
     /*
     Thủ tục searchAVL
-    searchAVL(<cây AVL>, <đối tượng>, <hàm so sánh>);
+    searchAVL(<cây AVL>, <khóa>, <hàm so sánh>);
     Nếu đối tượng đã tồn tại trong cây AVL thì sẽ trả về vị trí của nó trong cây
     Nếu không thì sẽ trả về NULL
     */
@@ -59,7 +59,7 @@ int main() {
     // strcpy(book->Author, "Brian W. Kernighan and Dennis M. Ritchie");
     // book->Quantity = 5;
     // Tìm kiếm sách trong bảng băm
-    // AVLNode *result = searchAVL(HashTableBook[0], book, compareString);
+    // AVLNode *result = searchAVL(HashTableBook[0], <key>, compareString);
     // if (result != NULL) {
     //     printf("Sách đã tồn tại trong bảng băm\n");
     // } else {
