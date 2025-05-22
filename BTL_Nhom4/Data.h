@@ -7,7 +7,7 @@
 
 // Định nghĩa cấu trúc đối tượng 
 struct Book{
-    char Title[100], Author[100], key[201];
+    char Title[100], Author[100];
     int Quantity;   
     Queue* queue; // con trỏ queue để lưu trữ thông tin hàng đợi
 };
@@ -49,6 +49,7 @@ typedef struct Queue Queue;
 
 //Cấu trúc cây AVL tổng quát
 struct AVLNode{
+    void *key; // Khóa của nút tự định nghĩa kiểu dữ liệu
     void *data; // Dữ liệu của nút tự định nghĩa kiểu dữ liệu
     struct AVLNode *left, *right; // Con trái và con phải của nút
     int height; // Chiều cao của nút
