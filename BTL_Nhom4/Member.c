@@ -4,11 +4,12 @@
 #include "Data.h"
 #include "hash.h"
 
+// Tạo 
 //Thêm thành viên
 void InputMember(Member *newMember) {
-    AVLNode *newNode = createNode(newMember); // Tạo nút mới cho thành viên
     char *key = newMember->IdentifyID; // Lấy IdentifyID làm khóa
-    InsertAVL(HashTableMember[hash(key)], newNode, compareString); // Thêm vào bảng băm
+    AVLNode *newNode = createNode(newMember,key); // Tạo nút mới cho thành viên
+    InsertAVL(HashTableMember[hash(key)], newNode, key, compareString); // Thêm vào bảng băm
 }
 // Đọc từ file csv
 void ReadMember(const char *filename) {
@@ -24,38 +25,18 @@ void ReadMember(const char *filename) {
         InputMember(newMember); // Thêm thành viên vào bảng băm
     }
     fclose(file);
-}
-void AddMember() {
-    Member *newMember = (Member*)malloc(sizeof(Member));
-    printf("Nhap Can cuoc cong dan: ");
-    scanf("%s", newMember->IdentifyID);
-    printf("Nhap ho va ten: ");
-    scanf("%s", newMember->Name);
-    newMember->CurrentQuantity = 0; // Khởi tạo số lượng sách mượn là 0
-    InputMember(newMember); // Thêm thành viên vào bảng băm
-    // Lưu thành viên vào file
-    FILE *file = fopen("Member.csv", "a");
-    if (file == NULL) {
-        printf("Khong the mo file! Member.csv\n");
-        return;
-    }
-    fprintf(file, "%s,%s,%d\n", newMember->IdentifyID, newMember->Name, newMember->CurrentQuantity);
-    fclose(file);
+
 }
 
 //Tìm kiếm thành viên
-bool SearchMember(char *IdentifyID) {
+Member* SearchMember(char *IdentifyID) {
     unsigned int index = hash(IdentifyID); // Tính toán chỉ số băm
     AVLNode *result = searchAVL(HashTableMember[index], IdentifyID, compareString); // Tìm kiếm trong bảng băm
-    // if (result == NULL) return NULL;
-    // Member *member = (Member *)result->data; // Lấy dữ liệu thành viên
-    // return member;
     if (result != NULL) {
         Member *member = (Member *)result->data; // Lấy dữ liệu thành viên
-        printf("Can cuoc cong dan: %s, Ho va ten: %s, So sach muon: %d\n", member->IdentifyID, member->Name, member->CurrentQuantity);
-        return true;
+        return member;
     } else {
-        return false;
+        return NULL; // Không tìm thấy thành viên 
     }
 }
 
@@ -71,22 +52,10 @@ void DeleteMember() {
         if (member->CurrentQuantity > 0) {
             printf("Khong the xoa thanh vien, vi con sach muon\n");
         }
-        else HashTableMember[index] = deleteAVL(HashTableMember[index], result->data, compareString); // Xóa thành viên khỏi bảng băm
+        else HashTableMember[index] = deleteAVL(HashTableMember[index], member->IdentifyID, compareString); // Xóa thành viên khỏi bảng băm
         printf("Da xoa thanh vien\n");
     } else {
         printf("Khong tim thay thanh vien\n");
-    }
-}
-//Hàm trả về số lượng sách đang mượn của thành viên theo CCCD
-int GetCurrentQuantity(char *IdentifyID) {
-    unsigned int index = hash(IdentifyID); // Tính toán chỉ số băm
-    AVLNode *result = searchAVL(HashTableMember[index], IdentifyID, compareString); // Tìm kiếm trong bảng băm
-    if (result != NULL) {
-        Member *member = (Member *)result->data; // Lấy dữ liệu thành viên
-        return member->CurrentQuantity; // Trả về số lượng sách đang mượn
-    } else {
-        printf("Khong tim thay thanh vien\n");
-        return -1;
     }
 }
 
@@ -96,10 +65,10 @@ int GetCurrentQuantity(char *IdentifyID) {
 void inorderWriteMember(FILE *file, AVLNode *node) {
     if (node == NULL) return;
 
-    inorderWriteMember(file, node->left);
-
     Member *member = (Member *)node->data;
     fprintf(file, "%s,%s,%d\n", member->IdentifyID, member->Name, member->CurrentQuantity);
+    
+    inorderWriteMember(file, node->left);
 
     inorderWriteMember(file, node->right);
 }
@@ -110,9 +79,6 @@ void StoreMember() {
         printf("Khong the mo file! Member.csv\n");
         return;
     }
-
-    // Ghi tiêu đề các cột, có thể bỏ qua nếu không cần
-    fprintf(file, "IdentifyID,Name,CurrentQuantity\n");
 
     for (int i = 0; i < TABLE_SIZE; i++) {
         AVLNode *node = HashTableMember[i];

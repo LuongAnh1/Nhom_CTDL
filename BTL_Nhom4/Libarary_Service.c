@@ -1,398 +1,339 @@
-#include "Libarary_Service.h"
 #include <stdio.h>
-#include <conio.h> // Thư viện cho hàm _getch()
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+//#include "Member.h"
+//#include "Data.h"
+#include <conio.h>   /* _getch() – dùng khi biên dịch trên Windows */
 
-bool KiemTraMatKhau(int n) {
-    if (n == ahihi) return 1;
-    else return 0;
-}
-void ClearScreen(){
+/* =============================================================
+   KHAI BÁO HÀM (PROTOTYPE)
+   ============================================================= */
+void   Start();
+void   ClearScreen();
+void   QuayLai();
+
+/* menu khách & quản lý */
+void   ThaoTacKhachHang();
+void   ThaoTacQuanLy();
+
+/* nghiệp vụ sách */
+void   TraCuuSach(int action);   /* action: 1 = khách, 2 = quản lý */
+void   MuonSach(int action);     /* action: 1 = đã có thông tin sách, 2 = chưa chọn sách */
+void   TraSach  (int action);
+
+/* hàm kiểm tra/giả lập dữ liệu – hiện trả về true hoặc giá trị cố định */
+bool   TimSach(const char *key1, const char *key2);
+int    SoLuongSach(); /* giả lập số lượng sách còn trong thư viện */
+bool   KiemTraThanhVien(const char *id);
+int    GetCurrentQuantity(const char *id);
+bool   KiemTraMatKhau(const char *pass);
+bool   KiemTraMaMuon(const char *borrowId);
+bool   KiemTraThuocThuVien();
+void   addMember();
+
+/* quản lý kho sách */
+void   ThemDauSach();
+void   XoaDauSach();
+void   BaoCaoHoatDong();
+void   ThongTinSach();
+/* ============================================================= */
+
+/* -------------------- HÀM TIỆN ÍCH -------------------------- */
+void ClearScreen() {
     printf("\033[H\033[J");
 }
-void Start(){
+
+void QuayLai() {
+    printf("\nNhan phim bat ky de quay lai...");
+    _getch();
+}
+
+/* -------------------- HÀM KIỂM TRA GIẢ LẬP ------------------ */
+bool KiemTraMatKhau(const char *pass)       { return strcmp(pass, "2701") == 0; }
+bool TimSach(const char *key1, const char *key2)               { (void)key1, key2; return true; }
+int  SoLuongSach(/*Member* member*/)                          { /*return member->CurrentQuantity;*/return 0;   }
+bool KiemTraThanhVien(const char *id /*char IdentifyID[12]*/) { 
+    /*
+    Member *member = SearchMember(id);
+    if (member != NULL) {
+        return true; // Thành viên đã tồn tại
+    } else {
+        return false; // Thành viên không tồn tại
+    }
+    */
+    (void)id;  
+    return 0; 
+}
+int  GetCurrentQuantity(const char *id)     { (void)id;  return 10;   }
+bool KiemTraMaMuon(const char *borrowId)    { (void)borrowId; return true; }
+bool KiemTraThuocThuVien()                   { return true; }
+void addMember() {
     ClearScreen();
-    printf("Chao mung ban da den voi thu vien ABC\n");
-    printf("-------------------------------\n");
-    printf("Ban muon truy cap voi tu cach la?\n ")
-    printf("1. Khach hang                   2. Nguoi quan ly");
+    puts("---------- THEM THANH VIEN ----------");
+    puts("Nhap Can cuoc cong dan: ");
+    char IdentifyID[12];
+    scanf("%15s", IdentifyID); getchar();
+    
+    puts("Nhap ho ten: ");
+    char Name[100];
+    fgets(Name, sizeof Name, stdin);
+    Name[strcspn(Name, "\n")] = '\0';
+
+    // Member *newMember = (Member*)malloc(sizeof(Member));
+    // strcpy(newMember->IdentifyID, IdentifyID);
+    // strcpy(newMember->Name, Name);
+    // newMember->CurrentQuantity = 0; /* Giả lập số lượng sách đã mượn là 0 */
+    //InputMember(newMember); /* Giả lập thêm thành viên vào danh sách */
+    
+
+    puts("Them thanh vien moi thanh cong!"); }
+
+/* CHƯƠNG TRÌNH CHÍNH */
+int main() {
+    Start();
+    return 0;
+}
+
+/* -------------------- MENU GỐC ------------------------------ */
+void Start() {
+    ClearScreen();
+    puts("Chao mung ban da den voi thu vien ABC");
+    puts("---------------------------------------");
+    puts("Ban muon truy cap voi tu cach la?");
+    puts("1. Khach hang");
+    puts("2. Nguoi quan ly");
     printf("Nhap lua chon: ");
+
     int user;
-    scanf("%d", &user); //Biến đại diện cho người dùng
-    ClearScreen();
+    scanf("%d", &user);
+    getchar(); /* xóa ký tự '\n' còn lại trong bộ đệm */
+
     switch (user) {
-        case 1:
-            ThaoTacKhachHang();
-            break;
-        case 2:
-            int pass;
+        case 1: ThaoTacKhachHang(); break;
+        case 2: {
+            char pass[32];
             printf("Nhap mat khau: ");
-            scanf("%d", &pass);
-            if (KiemTraMatKhau(pass)) {
-                ThaoTacQuanLy();
-            }
-            else {
-                printf("Mat khau khong dung!\n");
-                printf("Nhan phim bat ky de quay lai!");
-                _getch(); // Chờ người dùng nhấn phím
-                Start();
-            }
+            fgets(pass, sizeof pass, stdin);
+            pass[strcspn(pass, "\n")] = '\0';
+            if (KiemTraMatKhau(pass)) ThaoTacQuanLy();
+            else { puts("Sai mat khau!"); QuayLai(); Start(); }
             break;
+        }
         default:
-            printf("Lua chon khong hop le!\n");
-            printf("Nhan phim bat ky de quay lai!");
-            _getch(); // Chờ người dùng nhấn phím
+            puts("Lua chon khong hop le!");
+            QuayLai();
             Start();
     }
 }
 
-void ThaoTacKhachHang(){
+/* -------------------- MENU KHÁCH HÀNG ----------------------- */
+void ThaoTacKhachHang() {
     int action;
-    ClearScreen();
-    printf("Chon thao tac thuc hien: \n");
-    printf("1. Tra cuu sach\n");
-    printf("2. Muon sach\n");
-    printf("3. Tra sach \n");
-    printf("0. Quay lai!\n");
-    printf("Nhap lua chon: "); scanf("%d", &action);
-    switch (action) {
-        case 1:
-            TraCuuSach(action); //Truyền tham số để phân biệt giữa mượn sách và tra cứu
-            break;
-        case 2:
-            MuonSach(action);
-            break;
-        case 3:
-            traSach(action);
-            break;
-        case 0:
-            Start();
-            break;
-        default:
-            {
-                printf("Lua chon khong hop le!\n");
-                printf("Nhan phim bat ky de quay lai!");
-                _getch(); // Chờ người dùng nhấn phím
-                ThaoTacKhachHang();
-            }
-    }    
-}        
+    while (1) {
+        ClearScreen();
+        puts("----- MENU KHACH HANG -----");
+        puts("1. Tra cuu sach");
+        puts("2. Muon sach");
+        puts("3. Tra sach");
+        puts("0. Quay lai");
+        printf("Nhap lua chon: ");
 
-void TraCuuSach(int *n){
-    ClearScreen();
-    printf("----------TRA CUU SACH---------\n");
-    printf("Ban muon tim sach theo: \n");
-    printf("1. Ten sach\n");
-    printf("2. Ten tac gia\n");
-    printf("0. Quay lai\n");
-    int action;
-    printf("Nhap lua chon: "); scanf("%d", &action);
-    ClearScreen();
-    switch (action) {
-        case 1:
-            TimSachTheoTen(n); //Hàm tìm sách theo tên in ra thông tin sách
-            if (n == 1) {    // n = 1 là tới thẳng từ ThaoTacKhachHang, nên hỏi có muốn mượn sách không
-                printf("\nBan co muon muon sach khong? (Y/N): ");
-                char choice;
-                scanf(" %c", &choice);
-                if (choice == 'Y' || choice == 'y') {
-                    MuonSach(n); // Gọi hàm mượn sách với n = 1
-                }
-                else {
-                    printf("Ban da huy muon sach!\n");
-                    printf("Nhan phim bat ky de quay lai!");
-                    _getch(); // Chờ người dùng nhấn phím
-                    Start(); // Quay lại màn hình chính
-                }
-            }
-            // Nếu n khác 1 tức là tới từ mượn sách nên chỉ cần in thông tin sách 
-            break;
-        case 2:
-            TimSachTheoTacGia(n);
-            if (n == 1) { //Tương tự như trên
-                printf("\nBan co muon muon sach khong? (Y/N): ");
-                char choice;
-                scanf(" %c", &choice);
-                if (choice == 'Y' || choice == 'y') {
-                    MuonSach(n); // Gọi hàm mượn sách với n = 1
-                }
-                else {
-                    printf("\nBan da huy muon sach!\n");
-                    printf("Nhan phim bat ky de quay lai!");
-                    _getch(); // Chờ người dùng nhấn phím
-                    Start(); // Quay lại
-            }
-            
-        case 0:
-            ThaoTacKhachHang();
-            break;
-        default:
-            {
-                printf("Lua chon khong hop le!\n");
-                printf("Nhan phim bat ky de quay lai!");
-                _getch(); // Chờ người dùng nhấn phím
-                TraCuuSach(n);
-            }
-        }    
-    }
-}
+        if (scanf("%d", &action) != 1) { fflush(stdin); continue; }
+        getchar();
 
-void TimSachTheoTen(int *n){
-    char Title[50];
-    ClearScreen();
-    printf("----------TRA CUU SACH-----------\n \n");
-    printf("-------TIM SACH THEO TEN--------\n");
-    printf("Nhap ten sach: ");
-    scanf("%s", Title);
-    unsigned int index = hash(Title); // Tính toán chỉ số băm
-    AVLNode *result = searchAVL(HashTableBook[index], Title, compareString); // Tìm kiếm trong bảng băm
-    if (result != NULL) {
-        Book *book = (Book *)result->data; // Lấy dữ liệu sách
-        printf("Ten sach: %s, Ten tac gia: %s, So luong: %d\n", book->Title, book->Author, book->Quantity);
-    } else {
-        printf("Khong tim thay sach\n");
-        if (n == 2) { // n = 2 tức được gọi từ MuonSach, nếu khác 2 thì không cần hỏi
-            printf("Ban co muon them yeu cau vao hang doi khong? (Y/N): ");
-            char choice;
-            scanf(" %c", &choice);
-            if (choice == 'Y' || choice == 'y') {
-                // Thêm yêu cầu vào hàng đợi
-                printf("Da them yeu cau vao hang doi\n");
-                // UwU tien?
-                
-            } else {
-                printf("Ban da huy yeu cau!\n");
-                printf("Nhan phim bat ky de quay lai!");
-                _getch(); // Chờ người dùng nhấn phím
-                ThaoTacKhachHang();
-            }
-        }
-        else {
-            printf("Bam phim bat ky de quay lai!");
-            _getch(); // Chờ người dùng nhấn phím
-            ThaoTacKhachHang();
+        switch (action) {
+            case 1: TraCuuSach(1); break;
+            case 2: MuonSach(2);   break;
+            case 3: TraSach(1);    break;
+            case 0: Start();       /* Quay lai Start() */
+            default: puts("Lua chon khong hop le!"); QuayLai(); break;
         }
     }
 }
-void TimSachTheoTacGia(int *n){
-    char Author[50];
+
+/* -------------------- MENU QUẢN LÝ -------------------------- */
+void ThaoTacQuanLy() {
+    int action;
+    while (1) {
+        ClearScreen();
+        puts("----- MENU QUAN LY -----");
+        puts("1. Them dau sach");
+        puts("2. Xoa dau sach");
+        puts("3. Bao cao hoat dong");
+        puts("4. Tra cuu sach");
+        puts("5. Thong tin sach toan bo thu vien");
+        puts("0. Quay lai");
+        printf("Nhap lua chon: ");
+
+        if (scanf("%d", &action) != 1) { fflush(stdin); continue; }
+        getchar();
+
+        switch (action) {
+            case 1: ThemDauSach();      break;
+            case 2: XoaDauSach();       break;
+            case 3: BaoCaoHoatDong();   break;
+            case 4: TraCuuSach(2);      break;
+            case 5: ThongTinSach();     break;
+            case 0: Start();            /* Quay lai Start() */
+            default: puts("Lua chon khong hop le!"); QuayLai(); break;
+        }
+    }
+}
+
+/* -------------------- TRA CỨU SÁCH (CHUNG) ------------------ */
+void TraCuuSach(int action) {
     ClearScreen();
-    printf("----------TRA CUU SACH-----------\n \n");
-    printf("-------TIM SACH THEO TAC GIA-----\n");
+    puts("---------- TRA CUU SACH ----------");
+    char TenSach[100], TacGia[100];
+    printf("Nhap ten sach : ");
+    fgets(TenSach, sizeof TenSach, stdin);
+    TenSach[strcspn(TenSach, "\n")] = '\0';
+
     printf("Nhap ten tac gia: ");
-    scanf("%s", Author);
-    unsigned int index = hash(Author); // Tính toán chỉ số băm
-    AVLNode *result = searchAVL(HashTableBook[index], Author, compareString); // Tìm kiếm trong bảng băm
-    if (result != NULL) {
-        Book *book = (Book *)result->data; // Lấy dữ liệu sách
-        printf("Ten sach: %s, Ten tac gia: %s, So luong: %d\n", book->Title, book->Author, book->Quantity);
-    } else {
-        printf("Khong tim thay sach\n");
-        if (n == 2) { // n = 2 tức được gọi từ MuonSach, nếu khác 2 thì không cần hỏi
-            printf("Ban co muon them yeu cau vao hang doi khong? (Y/N): ");
-            char choice;
-            scanf(" %c", &choice);
-            if (choice == 'Y' || choice == 'y') {
-                // Thêm yêu cầu vào hàng đợi
-                printf("Da them yeu cau vao hang doi\n");
-                printf("Ban co muon them uu tien khong? (Y/N): ");
-                char choice;
-                scanf(" %c", &choice);
-                if (choice == 'Y' || choice == 'y') {
-                    // Thêm yêu cầu vào hàng đợi với ưu tiên
-                    printf("Da them yeu cau vao hang doi voi uu tien\n");
-                    printf("Nhan phim bat ky de quay lai!");
-                    _getch(); // Chờ người dùng nhấn phím
-                    ThaoTacKhachHang();
-                } else {
-                    printf("Ban da huy yeu cau!\n");
-                    printf("Nhan phim bat ky de quay lai!");
-                    _getch(); // Chờ người dùng nhấn phím
-                    ThaoTacKhachHang();
-                }
+    fgets(TacGia, sizeof TacGia, stdin);
+    TacGia[strcspn(TacGia, "\n")] = '\0';
 
-            } else {
-                printf("Ban da huy yeu cau!\n");
-                printf("Nhan phim bat ky de quay lai!");
-                _getch(); // Chờ người dùng nhấn phím
-                ThaoTacKhachHang();
-            }
-        }
-        else {
-            printf("Bam phim bat ky de quay lai!");
-            _getch(); // Chờ người dùng nhấn phím
-            ThaoTacKhachHang();
-        }
+    if (!TimSach(TenSach, TacGia)) {
+        puts("Khong tim thay sach!");
+        QuayLai();
+        return;
     }
-}
-void MuonSach(int *n){
-    ClearScreen();
-    printf("----------MUON SACH----------\n \n");
-    char IdentifyID[12];    
-    printf("Nhap Can cuoc cong dan: ");     
-    scanf("%s", IdentifyID);
-    if (SearchMember(IdentifyID)) {
-        if (GetCurrentQuantity(IdentifyID) < 10) {
-            if (n == 2) TraCuuSach(n); 
-            // n = 2 tức là từ ThaoTacKhachHang chưa có sách muốn mượn nên cần tra và in ra
-            // n khác 2 tức là tới từ TraCuuSach đã có thông tin sách rồi
-            printf("Xac nhan muon sach khong? (Y/N): "); //Xác nhận mượn sách
-            char choice; //biến lựa chọn
-            scanf(" %c", &choice);
-            if (choice == 'Y' || choice == 'y') {
-                // Tạo mã mượn sách
-                // Cập nhật thông tin 
-            }
-            else {
-                printf("Ban da huy muon sach!\n");
-                printf("Nhan phim bat ky de quay lai!");
-                _getch(); // Chờ người dùng nhấn phím
-                ThaoTacKhachHang();
-            }
-        }
-        else {
-            printf("Ban da muon toi da 10 cuon sach!\n");
-            printf("Ban co muon tra sach khong?");
-            char choice;
-            scanf(" %c", &choice);
-            if (choice == 'Y' || choice == 'y') {
-                traSach(n); // Gọi hàm trả sách với n = 1 hoặc n = 2
-            }
-            else {
-                printf("Nhan phim bat ky de quay lai!");
-                _getch(); // Chờ người dùng nhấn phím
-                ThaoTacKhachHang();
-            }
-        }
-    }
-    else { 
-        printf("Khong tim thay thanh vien!\n");
-        printf("Ban co muon dang ky thanh vien khong? (Y/N): ");
+
+    /* Hiển thị thông tin sách - giả lập */
+    puts("\n[Thong tin sach hien thi tai day] ...\n");
+    
+    /* Nếu là khách hàng (action==1) hỏi có muốn mượn không */
+    if (action == 1) {
         char choice;
+        printf("Ban co muon muon sach khong? (Y/N): ");
         scanf(" %c", &choice);
+        getchar();
+        if (choice == 'Y' || choice == 'y') { 
+            MuonSach(1);
+            return;
+        }
+    }
+    QuayLai();
+}
+
+/* -------------------- Mượn Sách ----------------------------- */
+void MuonSach(int action) {
+    /* action==2 -> chưa có thông tin sách nên tra cứu trước */
+    if (action == 2) {
+        TraCuuSach(1); /* sau khi tra cứu xong sẽ hỏi mượn luôn */
+        return; /* Gọi return sẽ thoát hàm luôn mà không thực hiện các lệnh phía sau*/
+    }
+
+    ClearScreen();
+    puts("---------- MUON SACH ----------\n");
+
+    char id[16];
+    printf("Nhap CCCD: ");
+    scanf("%15s", id); getchar();
+
+    if (!KiemTraThanhVien(id)) {
+        puts("Khong tim thay thanh vien!");
+        char choice;
+        printf("Dang ky thanh vien moi? (Y/N): ");
+        scanf(" %c", &choice); getchar();
+        if (choice == 'Y' || choice == 'y') addMember();
+        QuayLai();
+        return; 
+    }
+    /*Nếu tìm thấy thành viên sẽ thực hiện lệnh dưới   */
+    if (GetCurrentQuantity(id) >= 10) {
+        puts("Ban da muon toi da 10 cuon!");
+        printf("Ban co muon tra sach khong? (Y/N): ");
+        char choice;
+        scanf(" %c", &choice); getchar();
         if (choice == 'Y' || choice == 'y') {
-            addMember(); // Gọi hàm thêm thành viên
-            printf("Ban da dang ky thanh cong!\n");
-            printf("Nhan phim bat ky de quay lai!");
-            _getch(); // Chờ người dùng nhấn phím
-            ThaoTacKhachHang();
+            TraSach(1);
+            return;
+        } 
+        else if (choice == 'N' || choice == 'n') {
+            puts("Khong tra sach!");
         }
-        else {
-            printf("Nhan phim bat ky de quay lai!");
-            _getch(); // Chờ người dùng nhấn phím
-            ThaoTacKhachHang();
+        else{
+            puts("Ky tu khong hop le");
         }
+        QuayLai();
+        return;
     }
-}
-void traSach(int *n){
-    ClearScreen();
-    printf("----------TRA SACH----------\n \n");
-    char IdentifyID[12], BorrowID[12];    
-    printf("Nhap Can cuoc cong dan: ");     
-    scanf("%s", IdentifyID);
-    printf("Nhap ma muon sach: ");
-    scanf("%s", BorrowID);
-    if (KiemTraMaMuon(BorrowID)) {
-        //Cập nhật thông tin trả sách
-        if (KiemTraThuocThuVien) {
-            //Cập nhật dữ liệu
-            printf("Bam phim bat ky de quay lai!");
-            _getch(); // Chờ người dùng nhấn phím
-            ThaoTacKhachHang();
-        } else {
-            printf("Bam phim bat ky de quay lai!");
-            _getch(); // Chờ người dùng nhấn phím
-            ThaoTacKhachHang();
-        }    
-    else {
-        printf("Khong tim thay ma muon sach!\n");
-        printf("Nhan phim bat ky de quay lai!");
-        _getch(); // Chờ người dùng nhấn phím
-        ThaoTacKhachHang();
-        }
-    }
-}
-bool KiemTraMaMuon(char *BorrowID){
-    unsigned int index = hash(BorrowID); // Tính toán chỉ số băm
-    AVLNode *result = searchAVL(HashTableBorrowing[index], BorrowID, compareString); // Tìm kiếm trong bảng băm
-    if (result != NULL) {
-        return true; // Mã mượn sách đã tồn tại
-    } else {
-        return false; // Mã mượn sách không tồn tại
-    }
-}
-void ThaoTacQuanLy(){
-    int action;
-    printf("Chon thao tac thuc hien: \n");
-    printf("1. Them dau sach\n");
-    printf("2. Xoa dau sach\n");
-    printf("3. Bao cao hoat dong\n");
-    printf("4. Tra cuu sach\n");
-    printf("5. Thong tin sach toan bo thu vien\n");
-    printf("0. Quay lai!");
-    printf("Nhap lua chon: "); scanf("%d", &action);
-    switch (action) {
-        case 1:
-            themDauSach();
-            break;
-        case 2:
-            xoaDauSach();
-            break;
-        case 3:
-            baoCaoHoatDong();
-            break;
-        case 4:
-            tracuuSach();
-            break;
-        case 5:
-            thongTinSach();
-            break;    
-        case 0:
-            Start();
-            break;
-        default:
-            {
-                printf("Lua chon khong hop le!\n");
-                printf("Nhan phim bat ky de quay lai!");
-                _getch(); // Chờ người dùng nhấn phím
-                ThaoTacQuanLy();
+
+    if (SoLuongSach() == 0) {
+        puts("Thu vien da het sach tren!");
+        printf("Ban co muon them vao hang doi khong? (Y/N): ");
+        char choice;
+        scanf(" %c", &choice); getchar();
+        if (choice == 'Y' || choice == 'y') {
+            puts("Da them vao hang doi!");
+            printf("Ban co muon nang muc uu tien khong? (Y/N): ");
+            scanf(" %c", &choice); getchar();
+            if (choice == 'Y' || choice == 'y') {
+                puts("Da nang muc uu tien!");
+            } else {
+                puts("Khong nang muc uu tien!");
             }
-    }    
+        } else {
+            puts("Khong them vao hang doi!");
+        }
+        QuayLai();
+        return;
+    }
+    /* Giả lập sinh mã mượn sách và cập nhật */
+    puts("Muon sach thanh cong!");
+    QuayLai();
 }
 
-void themDauSach(){
+/* -------------------- TRA SÁCH ------------------------------ */
+void TraSach(int action) {
+    (void)action; /* chưa dùng thêm */
     ClearScreen();
-    printf("----------THEM DAU SACH----------\n \n");
-    Book *book = (Book *)malloc(sizeof(Book));
-    printf("Nhap ten sach: ");
-    scanf("%s", book->Title);
-    printf("Nhap ten tac gia: ");
-    scanf("%s", book->Author);
-    printf("Nhap so luong: ");
-    scanf("%d", &book->Quantity);
-    unsigned int index = hash(book->Title); // Tính toán chỉ số băm
-    HashTableBook[index] = insertAVL(HashTableBook[index], book, compareString); // Thêm sách vào bảng băm
-    printf("Da them sach thanh cong!\n");
+    puts("---------- TRA SACH ----------\n");
+
+    char borrowId[16];
+    printf("Nhap ma muon sach: ");
+    scanf("%15s", borrowId); getchar();
+
+    if (!KiemTraMaMuon(borrowId)) {
+        puts("Ma muon sach khong ton tai!");
+        QuayLai();
+        return;
+    }
+    /*Cập nhật thông tin trả sách*/
+    if (!KiemTraThuocThuVien()) {
+        puts("Sach khong thuoc thu vien!");
+        QuayLai();
+        return;
+    }
+    /*Ghi lại dữ liệu*/
+
+    puts("Tra sach thanh cong!");
+    QuayLai();
 }
 
-void xoaDauSach(){
+/* -------------------- QUẢN LÝ KHO SÁCH ---------------------- */
+void ThemDauSach() {
     ClearScreen();
-    printf("----------XOA DAU SACH----------\n \n");
-    char Title[50];
-    printf("Nhap ten sach: ");
-    scanf("%s", Title);
-    printf("Nhap ten tac gia: ");
-    scanf("%s", Author);
-}
-void baoCaoHoatDong(){
-    ClearScreen();
-    printf("----------BAO CAO HOAT DONG----------\n \n");
-    // Thực hiện báo cáo hoạt động
-    printf("Bao cao hoat dong thanh cong!\n");
+    puts("[Them dau sach] Dang phat trien...");
+    QuayLai();
 }
 
-void thongTinSach(){
+void XoaDauSach() {
     ClearScreen();
-    printf("----------THONG TIN SACH----------\n \n");
-    // Thực hiện thông tin sách
-    printf("Thong tin sach thanh cong!\n");
+    puts("[Xoa dau sach] Dang phat trien...");
+    QuayLai();
+}
+
+void BaoCaoHoatDong() {
+    ClearScreen();
+    puts("[Bao cao hoat dong] Dang phat trien...");
+    QuayLai();
+}
+
+void ThongTinSach() {
+    ClearScreen();
+    puts("[Thong tin sach] Dang phat trien...");
+    QuayLai();
 }
