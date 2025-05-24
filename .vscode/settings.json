@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "data.h": "c"
-    }
+        "data.h": "c",
+        "string.h": "c",
+        "member.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
