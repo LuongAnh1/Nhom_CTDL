@@ -18,10 +18,6 @@ gcc <Tên file>.c -o <Tên file>.exe -xc++ -lstdc++ -shared-libgcc
 AVLNode *HashTableBook[TABLE_SIZE] = {NULL};
 AVLNode *HashTableMember[TABLE_SIZE] = {NULL};
 AVLNode *HashTableBorrowing[TABLE_SIZE] = {NULL};
-// Hàm so sánh xâu
-int compareString(void *a, void *b) {
-    return strcmp((char *)a, (char *)b);
-}
 // Chỗ này cần có thêm hàm xử lý xâu để so sánh, với Book thì key = <Title>_<Author>
 int main() {
     // Xóa AVL sẽ tùy trường hợp của bảng băm -> hàm deleteAVL không cần 
@@ -81,7 +77,11 @@ int main() {
         printf("6. Đọc sách từ file\n");
         printf("0. Thoát\n");
         printf("Chọn chức năng: ");
-        scanf("%d", &choice);
+        if (scanf("%d", &choice) != 1) {
+            printf("Lỗi nhập! Vui lòng nhập số.\n");
+            while(getchar() != '\n'); // Xóa bộ đệm
+            continue;
+        }
         getchar(); // Xóa ký tự '\n' sau scanf
 
         switch (choice) {
@@ -91,10 +91,16 @@ int main() {
                 printf("Nhập tác giả: ");
                 fgets(author, sizeof(author), stdin); author[strcspn(author, "\n")] = 0;
                 printf("Nhập số lượng: ");
-                scanf("%d", &quantity); getchar();
+                if (scanf("%d", &quantity) != 1) {
+                    printf("Số lượng không hợp lệ!\n");
+                    while(getchar() != '\n');
+                    break;
+                }
+                getchar();
                 strcpy(book.Title, title);
                 strcpy(book.Author, author);
                 book.Quantity = quantity;
+                book.queue = NULL; // Khởi tạo queue nếu cần
                 insertBook(book);
                 printf("Đã thêm sách!\n");
                 break;
@@ -107,11 +113,13 @@ int main() {
                 fgets(title, sizeof(title), stdin); title[strcspn(title, "\n")] = 0;
                 printf("Nhập tác giả: ");
                 fgets(author, sizeof(author), stdin); author[strcspn(author, "\n")] = 0;
-                Book *found = searchBook(title, author);
-                if (found) {
-                    printf("Tìm thấy: %s | %s | %d\n", found->Title, found->Author, found->Quantity);
-                } else {
-                    printf("Không tìm thấy sách!\n");
+                {
+                    Book *found = searchBook(title, author);
+                    if (found) {
+                        printf("Tìm thấy: %s | %s | %d\n", found->Title, found->Author, found->Quantity);
+                    } else {
+                        printf("Không tìm thấy sách!\n");
+                    }
                 }
                 break;
             case 4:
@@ -140,6 +148,7 @@ int main() {
                 printf("Lựa chọn không hợp lệ!\n");
         }
     } while (choice != 0);
+
 
     return 0;
 }
