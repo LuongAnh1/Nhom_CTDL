@@ -5,50 +5,55 @@
 #include "Libarary_Service.h"
 #include "AVL_Tree.h"
 #include "Data.h"          
-int getCurrentQuantity(const char* identifyID);
-int isBookAvailable(const char* title, const char* author);
-void decreaseBookQuantity(const char* title, const char* author);
-void increaseBookQuantity(const char* title, const char* author);
-void incrementCurrentQuantity(const char* identifyID);
-void decrementCurrentQuantity(const char* identifyID);
+#include "hash.h"
 
-int compareString(const void* a, const void* b); // Nếu dùng cho AVL Tree
-
-
-// Bảng băm toàn cục (đã được khai báo trong data.h và định nghĩa trong main.c)
-extern AVLNode *HashTableBorrowing[TABLE_SIZE];
-
-// Hàm khởi tạo bảng băm và cây AVL
-void initBorrowing() {
-    for (int i = 0; i < TABLE_SIZE; i++) {
-        HashTableBorrowing[i] = NULL; // Đảm bảo bảng băm rỗng
+void InputBorrowing(Borrowing *newBorrowing) {
+    char *key = newBorrowing->Code; // Lấy Code làm khóa
+    AVLNode *newNode = createNode(Borrowing,key); // Tạo nút mới cho thành viên
+    HashTableBorrowing[hash(key)] = InsertAVL(HashTableBorrowing[hash(key)], newNode, key, compareString); // Thêm vào bảng băm
+}
+// Đọc từ file csv
+void ReadBorrowing(const char *filename) {
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Khong the mo file! %s\n", filename);
+        return;
     }
+    char line[256];
+    while (fgets(line, sizeof(line), file)){
+        Borrowing *newBorrowing = (Borrowing*)malloc(sizeof(Borrowing));
+        sscanf(line, "%[^,],%[^,],%[^,],%[^,]", newBorrowing->Code, newBorrowing->IdentifyID, newBorrowing->Title, newBorrowing->Author, newBorrowing->Start);
+
+        InputBorrowing(newBorrowing); // Thêm thành viên vào bảng băm
+    }
+    fclose(file);
+
 }
 
-// Hàm tạo mã phiếu mượn ngẫu nhiên (6 ký tự: số đến chữ)
-void generateCode(char* code) {
-    for (int i = 0; i < 6; i++) {
-        code[i] = (rand() % 36 < 10) ? ('0' + rand() % 10) : ('A' + rand() % 26);
-    }
-    code[6] = '\0';
+
+// Hàm tạo mã phiếu mượn --- Viet lai
+void generateCode(char Code[6]){
+
+}
+// Taoj nuts Borrowing mới
+Borrowing* newNode(char IdentifyID[12],char Title[100],char Author[100], struct tm now){
+    Borrowing *newBorrowing;
+    strcpy(newBorrowing->IdentifyID, IdentifyID);
+    strcpy(newBorrowing->Title, Title);
+    strcpy(newBorrowing->Author, Author);
+
+    // Tạo mã phiếu mượn
+    generateCode(newBorrowing->Code);
+
+    // Thoi gian la nhap
+    newBorrowing->Start = now;
 }
 
 // Hàm tạo phiếu mượn mới
-void createBorrowingTicket(char* identifyID, char* title, char* author) {
-    struct Borrowing newBorrowing;
-    strcpy(newBorrowing.IdentifyID, identifyID);
-    strcpy(newBorrowing.Title, title);
-    strcpy(newBorrowing.Author, author);
-
-    // Tạo mã phiếu mượn
-    generateCode(newBorrowing.Code);
-
-    // Lấy thời gian hiện tại
-    time_t now = time(NULL);
-    newBorrowing.Start = *localtime(&now);
-
+void createBorrowingTicket(char IdentifyID[12],char Title[100],char Author[100], struct tm now) {
+    Borrowing* newBorrowing = newNode(IdentifyID,Title,Author, now);
     // Kiểm tra số lượng sách đang mượn của bạn đọc (tối đa 3)
-    if (getCurrentQuantity(identifyID) >= 3) {
+    if (getCurrentQuantity(IdentifyID) >= 3) {
         printf("Ban doc da muon toi da 3 sach!\n");
         return;
     }
