@@ -5,7 +5,7 @@
 void inputMember(Member *newMember);
 void readMember(const char *filename);
 void addMember();
-bool searchMember();    
+Member* searchMember(char *IdentifyID);    
 void deleteMember();
 void storeMember();
 #endif
