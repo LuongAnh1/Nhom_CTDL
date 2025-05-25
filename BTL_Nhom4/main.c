@@ -4,15 +4,10 @@
 #include <stdlib.h>
 #include "Data.h"
 #include "AVL_Tree.h"
-<<<<<<< HEAD
-#include "Library_Service.h"
-#include "book.h"
-#include <windows.h>
-
-=======
 #include "Libarary_Service.h"
 #include "Member.h"
->>>>>>> main
+#include "book.h"
+#include <windows.h>
 
 /*
 Lưu ý khi kết nối các modul: thie
@@ -74,94 +69,116 @@ int main() {
     // }
     // free(book); // Giải phóng bộ nhớ đã cấp phát cho sách
 
-    SetConsoleOutputCP(65001);
-    int choice;
-    char title[100], author[100], fileName[100];
-    int quantity;
-    Book book;
+//     SetConsoleOutputCP(65001);
+//     int choice;
+//     char title[100], author[100], fileName[100];
+//     int quantity;
+//     Book book;
 
-    do {
-        printf("\n===== MENU =====\n");
-        printf("1. Thêm sách\n");
-        printf("2. Hiển thị tất cả sách\n");
-        printf("3. Tìm kiếm sách\n");
-        printf("4. Xóa sách\n");
-        printf("5. Lưu sách ra file\n");
-        printf("6. Đọc sách từ file\n");
-        printf("0. Thoát\n");
-        printf("Chọn chức năng: ");
-        if (scanf("%d", &choice) != 1) {
-            printf("Lỗi nhập! Vui lòng nhập số.\n");
-            while(getchar() != '\n'); // Xóa bộ đệm
-            continue;
-        }
-        getchar(); // Xóa ký tự '\n' sau scanf
+//     do {
+//         printf("\n===== MENU =====\n");
+//         printf("1. Thêm sách\n");
+//         printf("2. Hiển thị tất cả sách\n");
+//         printf("3. Tìm kiếm sách\n");
+//         printf("4. Xóa sách\n");
+//         printf("5. Lưu sách ra file\n");
+//         printf("6. Đọc sách từ file\n");
+//         printf("0. Thoát\n");
+//         printf("Chọn chức năng: ");
+// <<<<<<< main
+//         if (scanf("%d", &choice) != 1) {
+//             printf("Lỗi nhập! Vui lòng nhập số.\n");
+//             while(getchar() != '\n'); // Xóa bộ đệm
+//             continue;
+//         }
+// =======
+//         scanf("%d", &choice);
+// >>>>>>> khang
+//         getchar(); // Xóa ký tự '\n' sau scanf
 
-        switch (choice) {
-            case 1:
-                printf("Nhập tiêu đề sách: ");
-                fgets(title, sizeof(title), stdin); title[strcspn(title, "\n")] = 0;
-                printf("Nhập tác giả: ");
-                fgets(author, sizeof(author), stdin); author[strcspn(author, "\n")] = 0;
-                printf("Nhập số lượng: ");
-                if (scanf("%d", &quantity) != 1) {
-                    printf("Số lượng không hợp lệ!\n");
-                    while(getchar() != '\n');
-                    break;
-                }
-                getchar();
-                strcpy(book.Title, title);
-                strcpy(book.Author, author);
-                book.Quantity = quantity;
-                book.queue = NULL; // Khởi tạo queue nếu cần
-                insertBook(book);
-                printf("Đã thêm sách!\n");
-                break;
-            case 2:
-                printf("== Danh sách sách ==\n");
-                displayAllBooks();
-                break;
-            case 3:
-                printf("Nhập tiêu đề sách cần tìm: ");
-                fgets(title, sizeof(title), stdin); title[strcspn(title, "\n")] = 0;
-                printf("Nhập tác giả: ");
-                fgets(author, sizeof(author), stdin); author[strcspn(author, "\n")] = 0;
-                {
-                    Book *found = searchBook(title, author);
-                    if (found) {
-                        printf("Tìm thấy: %s | %s | %d\n", found->Title, found->Author, found->Quantity);
-                    } else {
-                        printf("Không tìm thấy sách!\n");
-                    }
-                }
-                break;
-            case 4:
-                printf("Nhập tiêu đề sách cần xóa: ");
-                fgets(title, sizeof(title), stdin); title[strcspn(title, "\n")] = 0;
-                printf("Nhập tác giả: ");
-                fgets(author, sizeof(author), stdin); author[strcspn(author, "\n")] = 0;
-                deleteBook(title, author);
-                printf("Đã xóa (nếu tồn tại)!\n");
-                break;
-            case 5:
-                printf("Nhập tên file để lưu: ");
-                fgets(fileName, sizeof(fileName), stdin); fileName[strcspn(fileName, "\n")] = 0;
-                saveToFile(fileName);
-                break;
-            case 6:
-                printf("Nhập tên file để đọc: ");
-                fgets(fileName, sizeof(fileName), stdin); fileName[strcspn(fileName, "\n")] = 0;
-                loadBooksFromFile(fileName);
-                printf("Đã đọc sách từ file!\n");
-                break;
-            case 0:
-                printf("Thoát chương trình.\n");
-                break;
-            default:
-                printf("Lựa chọn không hợp lệ!\n");
-        }
-    } while (choice != 0);
+//         switch (choice) {
+//             case 1:
+//                 printf("Nhập tiêu đề sách: ");
+//                 fgets(title, sizeof(title), stdin); title[strcspn(title, "\n")] = 0;
+//                 printf("Nhập tác giả: ");
+//                 fgets(author, sizeof(author), stdin); author[strcspn(author, "\n")] = 0;
+//                 printf("Nhập số lượng: ");
+// <<<<<<< main
+//                 if (scanf("%d", &quantity) != 1) {
+//                     printf("Số lượng không hợp lệ!\n");
+//                     while(getchar() != '\n');
+//                     break;
+//                 }
+//                 getchar();
+//                 strcpy(book.Title, title);
+//                 strcpy(book.Author, author);
+//                 book.Quantity = quantity;
+//                 book.queue = NULL; // Khởi tạo queue nếu cần
+// =======
+//                 scanf("%d", &quantity); getchar();
+//                 strcpy(book.Title, title);
+//                 strcpy(book.Author, author);
+//                 book.Quantity = quantity;
+// >>>>>>> khang
+//                 insertBook(book);
+//                 printf("Đã thêm sách!\n");
+//                 break;
+//             case 2:
+//                 printf("== Danh sách sách ==\n");
+//                 displayAllBooks();
+//                 break;
+//             case 3:
+//                 printf("Nhập tiêu đề sách cần tìm: ");
+//                 fgets(title, sizeof(title), stdin); title[strcspn(title, "\n")] = 0;
+//                 printf("Nhập tác giả: ");
+//                 fgets(author, sizeof(author), stdin); author[strcspn(author, "\n")] = 0;
+// <<<<<<< main
+//                 {
+//                     Book *found = searchBook(title, author);
+//                     if (found) {
+//                         printf("Tìm thấy: %s | %s | %d\n", found->Title, found->Author, found->Quantity);
+//                     } else {
+//                         printf("Không tìm thấy sách!\n");
+//                     }
+// =======
+//                 Book *found = searchBook(title, author);
+//                 if (found) {
+//                     printf("Tìm thấy: %s | %s | %d\n", found->Title, found->Author, found->Quantity);
+//                 } else {
+//                     printf("Không tìm thấy sách!\n");
+// >>>>>>> khang
+//                 }
+//                 break;
+//             case 4:
+//                 printf("Nhập tiêu đề sách cần xóa: ");
+//                 fgets(title, sizeof(title), stdin); title[strcspn(title, "\n")] = 0;
+//                 printf("Nhập tác giả: ");
+//                 fgets(author, sizeof(author), stdin); author[strcspn(author, "\n")] = 0;
+//                 deleteBook(title, author);
+//                 printf("Đã xóa (nếu tồn tại)!\n");
+//                 break;
+//             case 5:
+//                 printf("Nhập tên file để lưu: ");
+//                 fgets(fileName, sizeof(fileName), stdin); fileName[strcspn(fileName, "\n")] = 0;
+//                 saveToFile(fileName);
+//                 break;
+//             case 6:
+//                 printf("Nhập tên file để đọc: ");
+//                 fgets(fileName, sizeof(fileName), stdin); fileName[strcspn(fileName, "\n")] = 0;
+//                 loadBooksFromFile(fileName);
+//                 printf("Đã đọc sách từ file!\n");
+//                 break;
+//             case 0:
+//                 printf("Thoát chương trình.\n");
+//                 break;
+//             default:
+//                 printf("Lựa chọn không hợp lệ!\n");
+//         }
+//     } while (choice != 0);
 
+// <<<<<<< main
 
+// =======
+// >>>>>>> khang
     return 0;
 }
