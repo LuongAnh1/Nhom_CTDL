@@ -2,6 +2,7 @@
 #define QUEUE_H
 
 #include "data.h"
+
 //Chèn node
 void insertNode(char IdentifyID[12], char Title[100], char Author[100], bool order);
 //Lấy thông tin người đầu tiên và xóa
@@ -15,3 +16,4 @@ void traverse(char Titlee[100], char Author[100]);
 Queue* searching(Book* book, char IdentifyyID[12]);
 
 #endif
+

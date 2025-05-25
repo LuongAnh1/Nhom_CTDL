@@ -12,9 +12,10 @@ int max(int a, int b) {
     return (a > b) ? a : b;
 }
 // Tạo nút mới cho cây AVL
-AVLNode* createNode(void *data) {
+AVLNode* createNode(void *Data, void *Key) {
     AVLNode* newNode = (AVLNode*)malloc(sizeof(AVLNode));
-    newNode->data = data;
+    newNode->data = Data;
+    newNode->key =Key;
     newNode->left = NULL;
     newNode->right = NULL;
     newNode->height = 1; // Mới thêm vào nên chiều cao là 1
@@ -92,32 +93,32 @@ AVLNode* Balance(AVLNode* node) {
 
     return node; // Trả về con trỏ gốc của cây đã được cân bằng
 }
-AVLNode* insertAVL(AVLNode* root, void *data, CompareFunction cmp){
+AVLNode* insertAVL(AVLNode* root, void *data, void *key, CompareFunction cmp){
     // Kiểm tra xem cây có nút chưa
     if (root == NULL) 
-        return createNode(data); // Tạo nút mới nếu cây rỗng
+        return createNode(data, key); // Tạo nút mới nếu cây rỗng
 
     // Đưa cây vào đúng vị trí dựa trên giá trị của dữ liệu
-    if (cmp(data, root->data) < 0)
-        root->left = insertAVL(root->left, data, cmp);
-    else if (cmp(data, root->data) > 0) 
-        root->right = insertAVL(root->right, data, cmp);
-    else // Nếu dữ liệu đã tồn tại trong cây, trả về vị trí hiện tại
+    if (cmp(key, root->key) < 0)
+        root->left = insertAVL(root->left, data, key, cmp);
+    else if (cmp(key, root->key) > 0) 
+        root->right = insertAVL(root->right, data, key, cmp);
+    else // Nếu dữ liệu đã tồn tại trong cây => không làm gì cả
         return root;
     return Balance(root); // Cân bằng lại cây sau khi đã thêm nút mới
 }
-AVLNode* searchAVL(AVLNode* root, void *data, CompareFunction cmp){
-    if (root == NULL || cmp(data, root->data) == 0) {
+AVLNode* searchAVL(AVLNode* root, void *key, CompareFunction cmp){
+    if (root == NULL || cmp(key, root->key) == 0) {
         return root; // Nếu tìm thấy hoặc cây rỗng
     }
 
     // Nếu dữ liệu nhỏ hơn nút hiện tại, tìm kiếm trong cây con bên trái
-    if (cmp(data, root->data) < 0) {
-        return searchAVL(root->left, data, cmp);
+    if (cmp(key, root->key) < 0) {
+        return searchAVL(root->left, key, cmp);
     }
 
     // Nếu dữ liệu lớn hơn nút hiện tại, tìm kiếm trong cây con bên phải
-    return searchAVL(root->right, data, cmp);
+    return searchAVL(root->right, key, cmp);
 }
 AVLNode* minValueNode(AVLNode* node) {
     AVLNode* current = node;
@@ -128,17 +129,17 @@ AVLNode* minValueNode(AVLNode* node) {
     }
     return current;
 }
-AVLNode* deleteAVL(AVLNode* root, void *data, CompareFunction cmp) {
+AVLNode* deleteAVL(AVLNode* root, void *key, CompareFunction cmp) {
     // Nếu cây rỗng, trả về NULL
     if (root == NULL) {
         return root;
     }
 
     // Tìm vị trí của nút cần xóa
-    if (cmp(data, root->data) < 0) {
-        root->left = deleteAVL(root->left, data, cmp);
-    } else if (cmp(data, root->data) > 0) {
-        root->right = deleteAVL(root->right, data, cmp);
+    if (cmp(key, root->key) < 0) {
+        root->left = deleteAVL(root->left, key, cmp);
+    } else if (cmp(key, root->key) > 0) {
+        root->right = deleteAVL(root->right, key, cmp);
     } else {
         // Nút cần xóa được tìm thấy
         if ((root->left == NULL) || (root->right == NULL)) {
@@ -162,7 +163,7 @@ AVLNode* deleteAVL(AVLNode* root, void *data, CompareFunction cmp) {
 
             // Xóa nút nhỏ nhất trong cây con bên phải (gọi lại hàm đệ quy -> vị trí xóa là vị trí của nút nhỏ nhất)
             // -> cân bằng lại cây từ nút nhỏ nhất của cây con bên phải
-            root->right = deleteAVL(root->right, temp->data, cmp);
+            root->right = deleteAVL(root->right, temp->key, cmp);
         }
     }
 
