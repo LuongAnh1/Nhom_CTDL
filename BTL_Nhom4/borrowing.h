@@ -6,7 +6,11 @@
 #include "data.h"           
 #include "AVL_Tree.h"       
 
-
+//Hàm đọc file vào hash table
+void InputBorrowing(Borrowing *newBorrowing);
+// Đọc từ file csv
+void ReadBorrowing(const char *filename);
+//Tạo node 
 // Hàm tạo phiếu mượn mới
 void generateCode(char* code);
 
@@ -16,6 +20,7 @@ void LoadDataBorrowing(const char *filename);
 void createBorrowingTicket(char IdentifyID[12],char Title[100],char Author[100]);
 
 // Hàm tìm phiếu mượn theo mã
+
 // Trả về nút AVL chứa thông tin phiếu mượn, hoặc NULL nếu không tìm thấy
 AVLNode* searchBorrowingTicket(char* code);
 
