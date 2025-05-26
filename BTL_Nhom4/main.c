@@ -4,10 +4,10 @@
 #include <stdlib.h>
 #include "Data.h"
 #include "AVL_Tree.h"
-#include "Libarary_Service.h"
-#include "Member.h"
-#include "book.h"
-#include <windows.h>
+// #include "Libarary_Service.h"
+// #include "Member.h"
+#include "Book.h"
+// #include <windows.h>
 
 /*
 Lưu ý khi kết nối các modul: thie
@@ -21,12 +21,12 @@ AVLNode *HashTableBorrowing[TABLE_SIZE] = {NULL};
 
 // Chỗ này cần có thêm hàm xử lý xâu để so sánh, với Book thì key = <Title>_<Author>
 int main() {
-    ReadMember("Member.csv");
-    addMember();
-    storeMember();
-    searchMember();
+    // ReadMember("Member.csv");
+    // addMember();
+    // storeMember();
+    // searchMember();
 
-    Option();
+    // Option();
 
     // Xóa AVL sẽ tùy trường hợp của bảng băm -> hàm deleteAVL không cần 
     //-> sử dụng hàm searchAVL để xử lý với tùy bảng băm
