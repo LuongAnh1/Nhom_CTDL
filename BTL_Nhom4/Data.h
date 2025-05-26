@@ -19,7 +19,8 @@ typedef struct Queue Queue;
 struct Book{
     char Title[100], Author[100];
     int Quantity;   
-    Queue* queue1,queue0; // con trỏ queue để lưu trữ thông tin hàng đợi
+    Queue* queue1;
+    Queue* queue0; // con trỏ queue để lưu trữ thông tin hàng đợi
 };
 typedef struct Book Book;
 // Cấu trúc Book - dùng để lưu trữ thông tin sách

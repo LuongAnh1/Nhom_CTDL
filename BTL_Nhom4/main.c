@@ -5,7 +5,7 @@
 #include "Data.h"
 #include "AVL_Tree.h"
 // #include "Libarary_Service.h"
-// #include "Member.h"
+#include "Member.h"
 #include "Book.h"
 // #include <windows.h>
 

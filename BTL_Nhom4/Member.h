@@ -12,5 +12,5 @@ Member* SearchMember(char *IdentifyID);
 void DeleteMember();
 void storeMember();
 // Hàm duyệt cây AVL 
-void inorderWriteMember(FILE *file, AVLNode *node)
+// void inorderWriteMember(FILE *file, AVLNode *node)
 #endif

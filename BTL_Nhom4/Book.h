@@ -1,8 +1,8 @@
 #ifndef BOOK_H
 #define BOOK_H
 
-#include "data.h"
-#include "AVL_Tree.h"
+#include "Data.h"
+
 
 // Chuẩn hóa chuỗi
 void tolowerCase(char *str);

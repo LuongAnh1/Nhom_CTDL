@@ -1,4 +1,6 @@
-#include "book.h"
+#include "Book.h"
+#include "AVL_Tree.h"
+#include "hash.h"
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -30,10 +32,6 @@ void generateKey(char *key, const char *title, const char *author) {
     snprintf(key, 201, "%s_%s", t, a);
 }
 
-// Hàm so sánh chuỗi cho key
-int compareString(void *a, void *b) {
-    return strcmp((char *)a, (char *)b);
-}
 
 // Hàm hash
 int hashFunction(const char *key) {

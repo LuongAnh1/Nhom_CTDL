@@ -9,7 +9,7 @@
 void InputMember(Member *newMember) {
     char *key = newMember->IdentifyID; // Lấy IdentifyID làm khóa
     AVLNode *newNode = createNode(newMember,key); // Tạo nút mới cho thành viên
-    HashTableMember[hash(key)] = InsertAVL(HashTableMember[hash(key)], newNode, key, compareString); // Thêm vào bảng băm
+    HashTableMember[hash(key)] = insertAVL(HashTableMember[hash(key)], newNode, key, compareString); // Thêm vào bảng băm
 }
 // Đọc từ file csv
 void ReadMember(const char *filename) {
@@ -62,6 +62,7 @@ void DeleteMember() {
 //------Ghi ra file CSV------
 
 // Hàm duyệt cây AVL 
+
 void inorderWriteMember(FILE *file, AVLNode *node) {
     if (node == NULL) return;
 

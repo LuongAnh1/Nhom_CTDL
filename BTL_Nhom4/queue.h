@@ -1,7 +1,7 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-#include "data.h"
+#include "Data.h"
 
 //Chèn node
 void insertNode(char IdentifyID[12], char Title[100], char Author[100], bool order);

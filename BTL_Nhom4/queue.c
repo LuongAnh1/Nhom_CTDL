@@ -1,5 +1,8 @@
-#include "queue.h"
-#include "book.h"
+#include "Queue.h"
+#include "Book.h"
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 
 Queue* makeNode(char IdentifyID[12], char Title[100], char Author[100], bool order){
     Queue *newNode = (Queue*)malloc(sizeof(Queue));
@@ -25,7 +28,7 @@ void insertNode(char IdentifyID[12], char Title[100], char Author[100], bool ord
         return;
     }
 
-    Queue** head = order ? &(book->queue1) : &(book->queue0);
+    Queue** head = order ? (Queue**)&(book->queue1) : (Queue**)&(book->queue0);
     if (*head == NULL) {
         *head = newNode;
     } else {
@@ -37,9 +40,9 @@ void insertNode(char IdentifyID[12], char Title[100], char Author[100], bool ord
 
 //Lấy thông tin người đầu tiên
 Queue* getfront(Book *book){
-    if (book->queue1) {
+    if (book->queue1 != NULL) {
         return book->queue1;  // Ưu tiên 1
-    } else if (book->queue0) {
+    } else if (book->queue0 != NULL) {
         return book->queue0;  // Nếu không có người ưu tiên
     } else {
         return NULL; // Không có ai trong hàng đợi
