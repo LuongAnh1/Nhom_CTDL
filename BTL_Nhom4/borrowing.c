@@ -1,51 +1,60 @@
-#include <stdio.h>
 #include <string.h>
 #include <time.h>
 #include "borrowing.h"
-#include "Libarary_Service.h"
 #include "AVL_Tree.h"
 #include "Data.h"          
-int getCurrentQuantity(const char* identifyID);
-int isBookAvailable(const char* title, const char* author);
-void decreaseBookQuantity(const char* title, const char* author);
-void increaseBookQuantity(const char* title, const char* author);
-void incrementCurrentQuantity(const char* identifyID);
-void decrementCurrentQuantity(const char* identifyID);
-
-int compareString(const void* a, const void* b); // Nếu dùng cho AVL Tree
+#include "book.h"
+#include "hash.h"
 
 
-// Bảng băm toàn cục (đã được khai báo trong data.h và định nghĩa trong main.c)
-extern AVLNode *HashTableBorrowing[TABLE_SIZE];
-
-// Hàm khởi tạo bảng băm và cây AVL
-void initBorrowing() {
-    for (int i = 0; i < TABLE_SIZE; i++) {
-        HashTableBorrowing[i] = NULL; // Đảm bảo bảng băm rỗng
-    }
+// Hàm thêm dữ liệu vào bảng băm
+void InputBorowing(Borrowing *newBorrowing) {
+    char *key = newBorrowing->Code; // Lấy Code làm khóa
+    AVLNode *newNode = createNode(newBorrowing,key); // Tạo nút mới cho thành viên
+    HashTableMember[hash(key)] = InsertAVL(HashTableMember[hash(key)], newNode, key, compareString); // Thêm vào bảng băm
 }
 
-// Hàm tạo mã phiếu mượn ngẫu nhiên (6 ký tự: số đến chữ)
-void generateCode(char* code) {
+// Đọc dữ liệu từ file
+void LoadDataBorrowing(const char *filename){
+    FILE *f = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Khong the mo file! %s\n", filename);
+        return;
+    }
+    char line[300];
+    while (fgets(line, sizeof(line), file)){
+        Borrowing *newBorrowing = (Borrowing*)malloc(sizeof(Member));
+        sscanf(line, "%[^,],%[^,],%[^,],%[^,]",newBorrowing->Code,newBorrowing->IdentifyID,newBorrowing->Title,newBorrowing->Author,newBorrowing->Start);
+
+        InputBorowing(newBorrowing); // Thêm thành viên vào bảng băm
+    }
+    fclose(file);
+}
+
+// Tạo có quy luật (VD: 000000 -> 0000001; ABCDEF -> ABCDEG)
+void generateCode(char* code) { // sửa lại
     for (int i = 0; i < 6; i++) {
         code[i] = (rand() % 36 < 10) ? ('0' + rand() % 10) : ('A' + rand() % 26);
     }
     code[6] = '\0';
 }
+// Tạo dữ liệu
+Borrowing* CreateNode(char IdentifyID[12],char Title[100],char Author[100], time_t now){
+    Borrowing* newBorrowing;
+    strcpy(newBorrowing->IdentifyID, IdentifyID);
+    strcpy(newBorrowing->Title, Title);
+    strcpy(newBorrowing->Author, Author);
+    return newBorrowing;
+    // Tạo mã phiếu mượn
+    generateCode(newBorrowing->Code);
+
+    // Lấy thời gian hiện tại (thời nhập chứu không lấy dữ liệu từ máy nữa)
+    newBorrowing->Start = *localtime(&now);
+}
 
 // Hàm tạo phiếu mượn mới
-void createBorrowingTicket(char* identifyID, char* title, char* author) {
-    struct Borrowing newBorrowing;
-    strcpy(newBorrowing.IdentifyID, identifyID);
-    strcpy(newBorrowing.Title, title);
-    strcpy(newBorrowing.Author, author);
-
-    // Tạo mã phiếu mượn
-    generateCode(newBorrowing.Code);
-
-    // Lấy thời gian hiện tại
-    time_t now = time(NULL);
-    newBorrowing.Start = *localtime(&now);
+void createBorrowingTicket(char IdentifyID[12],char Title[100],char Author[100], time_t now) {
+    Borrowing* newBorrowing = CreateNode()
 
     // Kiểm tra số lượng sách đang mượn của bạn đọc (tối đa 3)
     if (getCurrentQuantity(identifyID) >= 3) {
