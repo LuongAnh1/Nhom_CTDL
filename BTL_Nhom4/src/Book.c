@@ -136,7 +136,7 @@ void saveBookToFileHelper(AVLNode *root, FILE *f) {
     if (!root) return;
     saveBookToFileHelper(root->left, f);
     Book *book = (Book *)root->data;
-    fprintf(f, "%s,%s,%d\n", book->Title, book->Author, book->Quantity);
+    fprintf(f, "%s;%s;%d\n", book->Title, book->Author, book->Quantity);
     saveBookToFileHelper(root->right, f);
 }
 
