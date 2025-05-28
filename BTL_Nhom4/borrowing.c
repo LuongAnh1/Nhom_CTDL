@@ -1,8 +1,6 @@
-#include <stdio.h>
 #include <string.h>
 #include <time.h>
 #include "borrowing.h"
-#include "Libarary_Service.h"
 #include "AVL_Tree.h"
 #include "Data.h"          
 #include "hash.h"
@@ -49,6 +47,19 @@ Borrowing* newNode(char IdentifyID[12],char Title[100],char Author[100], struct 
 
     // Thoi gian la nhap
     newBorrowing->Start = now;
+}
+// Tạo dữ liệu
+Borrowing* CreateNode(char IdentifyID[12],char Title[100],char Author[100], time_t now){
+    Borrowing* newBorrowing;
+    strcpy(newBorrowing->IdentifyID, IdentifyID);
+    strcpy(newBorrowing->Title, Title);
+    strcpy(newBorrowing->Author, Author);
+    return newBorrowing;
+    // Tạo mã phiếu mượn
+    generateCode(newBorrowing->Code);
+
+    // Lấy thời gian hiện tại (thời nhập chứu không lấy dữ liệu từ máy nữa)
+    newBorrowing->Start = *localtime(&now);
 }
 
 // Hàm tạo phiếu mượn mới
