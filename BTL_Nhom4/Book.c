@@ -126,15 +126,15 @@ void loadBooksFromFile(const char *fileName) {
             continue;
         line[strcspn(line, "\n")] = '\0';
         Book book;
-        char *token = strtok(line, ",");
+        char *token = strtok(line, ";");
         if (!token) continue;
         strncpy(book.Title, token, sizeof(book.Title) - 1); book.Title[sizeof(book.Title) - 1] = '\0';
 
-        token = strtok(NULL, ",");
+        token = strtok(NULL, ";");
         if (!token) continue;
         strncpy(book.Author, token, sizeof(book.Author) - 1); book.Author[sizeof(book.Author) - 1] = '\0';
 
-        token = strtok(NULL, ",");
+        token = strtok(NULL, ";");
         if (!token) continue;
         book.Quantity = atoi(token);
 
