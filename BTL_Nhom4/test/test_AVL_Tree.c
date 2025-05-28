@@ -2,62 +2,89 @@
 #include <stdlib.h>
 #include "AVL_Tree.h"
 
-// Hàm so sánh khóa kiểu int
-int compareInt(void* a, void* b) {
-    int intA = *(int*)a;
-    int intB = *(int*)b;
-    return intA - intB;
+// Ham so sanh cho so nguyen
+int intCompare(void *a, void *b) {
+    return (*(int*)a) - (*(int*)b);
 }
 
-// Hàm in theo thứ tự giữa để kiểm tra cây
-void inorderTraversal(AVLNode* root) {
-    if (root != NULL) {
-        inorderTraversal(root->left);
-        printf("%d ", *(int*)(root->key));
-        inorderTraversal(root->right);
-    }
+// Ham duyet giua de in cac gia tri trong cay AVL
+void printInOrder(AVLNode* root) {
+    if (root == NULL) return;
+    printInOrder(root->left);
+    printf("%d ", *(int*)root->data);
+    printInOrder(root->right);
+}
+
+// Kiem thu them phan tu vao cay
+void test_insert() {
+    printf("=== KIEM THU INSERT ===\n");
+    AVLNode* root = NULL;
+    int a = 10, b = 20, c = 5;
+    root = insertAVL(root, &a, &a, intCompare);
+    root = insertAVL(root, &b, &b, intCompare);
+    root = insertAVL(root, &c, &c, intCompare);
+
+    printf("Cay AVL sau khi chen 10, 20, 5 (thu tu giua): ");
+    printInOrder(root);
+    printf("\n");
+}
+
+// Kiem thu tim kiem phan tu trong cay
+void test_search() {
+    printf("=== KIEM THU SEARCH ===\n");
+    AVLNode* root = NULL;
+    int v[3] = {10, 20, 5};
+    for (int i = 0; i < 3; ++i)
+        root = insertAVL(root, &v[i], &v[i], intCompare);
+
+    printf("Cay AVL hien tai (thu tu giua): ");
+    printInOrder(root);
+    printf("\n");
+
+    int searchVal = 20;
+    AVLNode* found = searchAVL(root, &searchVal, intCompare);
+    if (found)
+        printf("Tim thay nut co gia tri %d\n", *(int*)found->data);
+    else
+        printf("Khong tim thay nut co gia tri %d\n", searchVal);
+
+    searchVal = 99;
+    found = searchAVL(root, &searchVal, intCompare);
+    if (found)
+        printf("Tim thay nut co gia tri %d\n", *(int*)found->data);
+    else
+        printf("Khong tim thay nut co gia tri %d\n", searchVal);
+}
+
+// Kiem thu xoa phan tu trong cay
+void test_delete() {
+    printf("=== KIEM THU DELETE ===\n");
+    AVLNode* root = NULL;
+    int v[5] = {10, 20, 5, 15, 25};
+    for (int i = 0; i < 5; ++i)
+        root = insertAVL(root, &v[i], &v[i], intCompare);
+
+    printf("Cay AVL truoc khi xoa (thu tu giua): ");
+    printInOrder(root);
+    printf("\n");
+
+    int del = 20;
+    root = deleteAVL(root, &del, intCompare);
+    printf("Cay AVL sau khi xoa 20 (thu tu giua): ");
+    printInOrder(root);
+    printf("\n");
+
+    del = 99;
+    root = deleteAVL(root, &del, intCompare);
+    printf("Cay AVL sau khi xoa 99 (khong ton tai) (thu tu giua): ");
+    printInOrder(root);
+    printf("\n");
 }
 
 int main() {
-    AVLNode* root = NULL;
-
-    // Dữ liệu kiểm thử
-    int keys[] = {20, 10, 30, 25, 40, 22, 50};
-    int n = sizeof(keys) / sizeof(keys[0]);
-
-    // Chèn các phần tử vào cây AVL
-    printf("Chen cac nut: ");
-    for (int i = 0; i < n; i++) {
-        printf("%d ", keys[i]);
-        int* key = malloc(sizeof(int));
-        *key = keys[i];
-        root = insertAVL(root, NULL, key, compareInt);
-    }
-    printf("\n");
-
-    // In cây theo thứ tự giữa sau khi chèn
-    printf("Cay AVL sau khi chen (inorder): ");
-    inorderTraversal(root);
-    printf("\n");
-
-    // Tìm kiếm 1 nút
-    int target = 25;
-    AVLNode* found = searchAVL(root, &target, compareInt);
-    if (found) {
-        printf("Tim thay nut co khoa %d.\n", *(int*)found->key);
-    } else {
-        printf("Khong tim thay nut co khoa %d.\n", target);
-    }
-
-    // Xóa một nút
-    int toDelete = 30;
-    printf("Xoa nut co khoa %d.\n", toDelete);
-    root = deleteAVL(root, &toDelete, compareInt);
-
-    // In cây sau khi xóa
-    printf("Cay AVL sau khi xoa (inorder): ");
-    inorderTraversal(root);
-    printf("\n");
+    test_insert();
+    test_search();
+    test_delete();
     system("PAUSE");
     return 0;
 }
