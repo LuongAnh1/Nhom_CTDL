@@ -20,6 +20,10 @@ void ReadMember(const char *filename) {
     }
     char line[256];
     while (fgets(line, sizeof(line), file)){
+        // Nếu dòng chỉ chứa ký tự newline (dòng trống)
+        if (strcmp(line, "\n") == 0)
+            continue;
+        line[strcspn(line, "\n")] = '\0';
         Member *newMember = (Member*)malloc(sizeof(Member));
         sscanf(line, "%[^,],%[^,],%d", newMember->IdentifyID, newMember->Name, &newMember->CurrentQuantity);
         InputMember(newMember); // Thêm thành viên vào bảng băm
