@@ -12,7 +12,7 @@
 #include "Member.h"
 
 // Biến toàn cục để lưu mã phiếu mượn hiện tại với giá trị mặc định
-static char currentCode[6] = "000000";
+char currentCode[6] = "000000";
 
 //Hàm thêm phiếu mượn vào bảng băm bằng cách tạo nút và chèn vào AVL
 void InputBorrowing(Borrowing *newBorrowing) {
@@ -159,9 +159,9 @@ void WriteReturn(const char *filename, Borrowing* borrow){
     if (file) {
         fprintf(file, "%s;%s;%s;%s;%d/%d/%d;%d/%d/%dd\n", borrow->Code, 
             borrow->IdentifyID, borrow->Title, borrow->Author, 
-            borrow->Start.tm_mday, borrow->Start.tm_mon
-            borrow->Start.tm_year,\
-            end.tm_mday, end.tm_mon, end.tm_year));//Ghi dữ liệu
+            borrow->Start.tm_mday, borrow->Start.tm_mon,
+            borrow->Start.tm_year,
+            end.tm_mday, end.tm_mon, end.tm_year);//Ghi dữ liệu
     }
     else 
         printf("Loi khong mo duoc file");
@@ -193,7 +193,7 @@ void deleteBorrowingTicket(char code[6]) {
     tmp->Quantity ++; 
 
     // Cập nhật số lượng sách đang mượn của bạn đọc
-    Member* tmp1=searchMember(borrow->IdentifyID);
+    Member* tmp1=SearchMember(borrow->IdentifyID);
     tmp1->CurrentQuantity--;
 
     // Xóa khỏi cây AVL

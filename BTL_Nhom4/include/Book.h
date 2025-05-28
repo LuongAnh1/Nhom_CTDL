@@ -2,6 +2,7 @@
 #define BOOK_H
 
 #include "Data.h"
+#include "hash.h"
 
 
 // Chuẩn hóa chuỗi
@@ -13,9 +14,6 @@ void generateKey(char *key, const char *title, const char *author);
 
 // So sánh key dạng chuỗi
 int compareString(void *a, void *b);
-
-// Hàm hash cho key
-int hashFunction(const char *key);
 
 // Đọc dữ liệu sách từ file
 void loadBooksFromFile(const char *fileName);

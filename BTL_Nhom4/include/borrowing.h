@@ -7,7 +7,7 @@
 #include "AVL_Tree.h"
 
 // Biến toàn cục
-extern static char currentCode[6];
+extern char currentCode[6];
 // Hàm thêm phiếu mượn vào bảng băm
 void InputBorrowing(Borrowing *newBorrowing);
 
@@ -20,7 +20,7 @@ void generateCode(char* code);
 // Tạo nút borrowing mới 
 Borrowing* createBorrowingNode(char IdentifyID[12], char Title[100], char Author[100], struct tm now);
 // Tham số: identifyID (CCCD bạn đọc), title (tiêu đề sách), author (tác giả sách), now (thời gian mượn)
-void createBorrowingTicket(char IdentifyID[12], char Title[100], char Author[100], time_t now);
+void createBorrowingTicket(char IdentifyID[12], char Title[100], char Author[100], struct tm now);
 // Tìm phiếu mượn theo mã
 // Trả về nút AVL chứa thông tin phiếu mượn, hoặc NULL nếu không tìm thấy
 AVLNode* searchBorrowingTicket(char* code);

@@ -32,17 +32,6 @@ void generateKey(char *key, const char *title, const char *author) {
     snprintf(key, 201, "%s_%s", t, a);
 }
 
-
-// Hàm hash
-int hashFunction(const char *key) {
-    unsigned long hash = 5381;
-    int c;
-    while ((c = *key++)) {
-        hash = ((hash << 5) + hash) + c;
-    }
-    return hash % TABLE_SIZE;
-}
-
 // Thêm sách vào hệ thống
 void insertBook(Book book) {
     trim(book.Title);
@@ -52,7 +41,7 @@ void insertBook(Book book) {
 
     char key[201];
     generateKey(key, book.Title, book.Author);
-    int index = hashFunction(key);
+    int index = hash(key);
 
     // printf("DEBUG: Thêm sách với key = '%s', index = %d\n", key, index);
 
@@ -75,7 +64,7 @@ void insertBook(Book book) {
 Book* searchBook(const char *title, const char *author) {
     char key[201];
     generateKey(key, title, author);
-    int index = hashFunction(key);
+    int index = hash(key);
 
     //printf("DEBUG: Tìm sách với key = '%s', index = %d\n", key, index);
 
@@ -88,7 +77,7 @@ Book* searchBook(const char *title, const char *author) {
 void deleteBook(const char *title, const char *author) {
     char key[201];
     generateKey(key, title, author);
-    int index = hashFunction(key);
+    int index = hash(key);
     HashTableBook[index] = deleteAVL(HashTableBook[index], key, compareString);
 }
 
