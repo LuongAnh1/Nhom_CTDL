@@ -121,6 +121,10 @@ void loadBooksFromFile(const char *fileName) {
     }
     char line[256];
     while (fgets(line, sizeof(line), f)) {
+        // Nếu dòng chỉ chứa ký tự newline (dòng trống)
+        if (strcmp(line, "\n") == 0)
+            continue;
+        line[strcspn(line, "\n")] = '\0';
         Book book;
         char *token = strtok(line, ",");
         if (!token) continue;
