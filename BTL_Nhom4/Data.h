@@ -27,7 +27,7 @@ typedef struct Book Book;
 
 struct Member{
     char IdentifyID[12], Name[100];
-    int CurrentQuantity;
+    int CurrentQuantity; // Số lượng sách đang mượn
 };
 typedef struct Member Member;
 // Cấu trúc Member - dùng để lưu trữ thông tin thành viên

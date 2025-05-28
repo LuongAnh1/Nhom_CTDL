@@ -31,11 +31,15 @@ void ReadBorrowing(const char *filename) {
     }
     char line[256];
     // Đọc dòng đầu tiên để lấy mã hiện tại
-    if (fgets(line, sizeof(line), file)) {
-        sscanf(line, "%5s", currentCode);
-    }
+    if (fgets(line, sizeof(line), file)) 
+        sscanf(line, "%6s", currentCode);
+
     //Đọc các dòng dữ liệu của phiếu mượn
     while (fgets(line, sizeof(line), file)) {
+        // Nếu dòng chỉ chứa ký tự newline (dòng trống)
+        if (strcmp(line, "\n") == 0)
+            continue;
+        line[strcspn(line, "\n")] = '\0';
         Borrowing *newBorrowing = (Borrowing*)malloc(sizeof(Borrowing));//Cấp phát động
         //Kiểm tra bộ nhớ
         if (newBorrowing == NULL) {
@@ -43,19 +47,16 @@ void ReadBorrowing(const char *filename) {
             fclose(file);
             return;
         }
-        time_t startTime;
         // đọc các trường 
-        if (sscanf(line, "%[^,],%[^,],%[^,],%[^,],%ld",
-                   newBorrowing->Code, newBorrowing->IdentifyID,
-                   newBorrowing->Title, newBorrowing->Author, &startTime) != 5) {
-            free(newBorrowing);
-            continue; // Bỏ qua dòng không hợp lệ
-        }
-        newBorrowing->Start = *localtime(&startTime); // Chuyển đổi thời gian
+        sscanf(line, "%[^,];%[^,];%[^,];%[^,];%d/%d/%d",
+            newBorrowing->Code, newBorrowing->IdentifyID,
+            newBorrowing->Title, newBorrowing->Author,
+            &newBorrowing->Start.tm_mday,
+            &newBorrowing->Start.tm_mon,
+            &newBorrowing->Start.tm_year);
         InputBorrowing(newBorrowing); // Thêm vào bảng băm
     }
     fclose(file);
-
 }
 
 // Hàm tạo mã phiếu mượn --- Viet lai
@@ -66,6 +67,7 @@ void generateCode(char* code) {
     sprintf(currentCode, "%06d", num); // Đảm bảo chuỗi 6 chữ số
     strcpy(code, currentCode);
 }
+/*
 // // Tạo nút Borrowing mới
 // Borrowing* newNode(char IdentifyID[12],char Title[100],char Author[100],  time_t now){
 //     Borrowing *newBorrowing = (Borrowing*)malloc(sizeof(Borrowing));
@@ -96,7 +98,9 @@ void generateCode(char* code) {
 // }
 
 //Kết hợp newnode và creatnewnode để đồng bộ vì mục đích là tạo nút borrowing mới
-Borrowing* createBorrowingNode(char IdentifyID[12], char Title[100], char Author[100], time_t now) {
+*/
+
+Borrowing* createBorrowingNode(char IdentifyID[12], char Title[100], char Author[100], struct tm now) {
     Borrowing *newBorrowing = (Borrowing*)malloc(sizeof(Borrowing));//Cấp phát động
     //Kiểm tra cấp phát
     if (newBorrowing == NULL) {
@@ -107,34 +111,16 @@ Borrowing* createBorrowingNode(char IdentifyID[12], char Title[100], char Author
     strcpy(newBorrowing->Title, Title);
     strcpy(newBorrowing->Author, Author);
     generateCode(newBorrowing->Code);//Tạo mã mới
-    newBorrowing->Start = *localtime(&now);//Gán thời gian hiện tại
+    newBorrowing->Start.tm_mday = now.tm_mday;//Gán thời gian hiện tại
+    newBorrowing->Start.tm_mon = now.tm_mon;
+    newBorrowing->Start.tm_year = now.tm_year;
     return newBorrowing;
 }
 
 // Hàm tạo phiếu mượn mới
-void createBorrowingTicket(char IdentifyID[12],char Title[100],char Author[100], time_t now) {
-// Kiểm tra số lượng sách mượn của bạn đọc
+void createBorrowingTicket(char IdentifyID[12],char Title[100],char Author[100], struct tm now) {
     Member *member = SearchMember(IdentifyID);
-    if (member == NULL) {
-        printf("Khong tim thay ban doc voi CCCD: %s\n", IdentifyID);
-        return;
-    }
-    if (member->CurrentQuantity >= 3) {
-        printf("Ban doc da muon toi da 3 sach!\n");
-        return;
-    }
-
-    // Kiểm tra sách có sẵn không
     Book *book = searchBook(Title, Author);
-    if (book == NULL) {
-        printf("Khong tim thay sach: %s - %s\n", Title, Author);
-        return;
-    }
-    if (book->Quantity <= 0) {
-        printf("Sach da het, them vao hang doi!\n");
-        addToQueue(IdentifyID, Title, Author, now);
-        return;
-    }
 
     // Tạo phiếu mượn mới
     Borrowing *newBorrowing = createBorrowingNode(IdentifyID, Title, Author, now);
@@ -145,112 +131,6 @@ void createBorrowingTicket(char IdentifyID[12],char Title[100],char Author[100],
 
     // Tăng số lượng sách mượn của bạn đọc
     member->CurrentQuantity++;
-
-    // Ghi vào file borrowing.csv
-    FILE *file = fopen("borrowing.csv", "a");
-    if (file) {
-        fprintf(file, "%s,%s,%s,%s,%ld\n", newBorrowing->Code, newBorrowing->IdentifyID,
-                newBorrowing->Title, newBorrowing->Author, mktime(&newBorrowing->Start));
-        fclose(file);
-    } else {
-        printf("Loi khong mo duoc file borrowing.csv\n");
-    }
-
-
-}
-
-// Thêm bạn đọc vào hàng đợi nếu sách không còn
-void addToQueue(char IdentifyID[12], char Title[100], char Author[100], time_t now) {
-    Book *book = searchBook(Title, Author);
-    if (book == NULL) {
-        printf("Khong tim thay sach: %s - %s\n", Title, Author);
-        return;
-    }
-
-    Queue *newQueueNode = (Queue*)malloc(sizeof(Queue));
-    strcpy(newQueueNode->IdentifyID, IdentifyID);
-    strcpy(newQueueNode->Title, Title);
-    strcpy(newQueueNode->Author, Author);
-    newQueueNode->DecideBorrow = *localtime(&now);
-    newQueueNode->Order = false; // Mặc định không ưu tiên
-    newQueueNode->next = NULL;
-
-    // Thêm vào hàng đợi (ưu tiên hoặc không ưu tiên)
-    if (newQueueNode->Order) {
-        if (book->queue1 == NULL) {
-            book->queue1 = newQueueNode;
-        } else {
-            Queue *current = book->queue1;
-            while (current->next != NULL) {
-                current = current->next;
-            }
-            current->next = newQueueNode;
-        }
-    } else {
-        if (book->queue0 == NULL) {
-            book->queue0 = newQueueNode;
-        } else {
-            Queue *current = book->queue0;
-            while (current->next != NULL) {
-                current = current->next;
-            }
-            current->next = newQueueNode;
-        }
-    }
-}
-
-// Hàm xử lý mượn sách từ hàng đợi
-void borrowFromQueue(char IdentifyID[12], char Title[100], char Author[100], time_t now) {
-    Book *book = searchBook(Title, Author); // Tìm sách trong bảng băm
-    if (book == NULL) {
-        printf("Khong tim thay sach: %s - %s\n", Title, Author);
-        return;
-    }
-
-    Queue *current = book->queue1 ? book->queue1 : book->queue0; // Lấy hàng đợi ưu tiên hoặc không ưu tiên
-    Queue *prev = NULL;
-
-    while (current != NULL) {
-        if (strcmp(current->IdentifyID, IdentifyID) == 0) {
-            // Kiểm tra thời gian (3 ngày)
-            time_t currentTime = now;
-            double seconds = difftime(currentTime, mktime(&current->DecideBorrow));
-            double days = seconds / (24 * 60 * 60);
-            if (days > 3) {
-                printf("Da qua 3 ngay, chuyen sang nguoi tiep theo!\n");
-                if (prev == NULL) {
-                    if (current->Order) {
-                        book->queue1 = current->next;
-                    } else {
-                        book->queue0 = current->next;
-                    }
-                } else {
-                    prev->next = current->next;
-                }
-                free(current);
-                return;
-            }
-
-            // Cho mượn sách
-            createBorrowingTicket(IdentifyID, Title, Author, now);
-            Member *member = SearchMember(IdentifyID);
-            if (member) member->CurrentQuantity++; // Cập nhật số lượng sách mượn
-            if (prev == NULL) {
-                if (current->Order) {
-                    book->queue1 = current->next;
-                } else {
-                    book->queue0 = current->next;
-                }
-            } else {
-                prev->next = current->next;
-            }
-            free(current);
-            return;
-        }
-        prev = current;
-        current = current->next;
-    }
-    printf("Khong tim thay ban doc trong hang doi!\n");
 }
 
 // Hàm tìm phiếu mượn theo mã
@@ -262,7 +142,7 @@ AVLNode* searchBorrowingTicket(char code[6]) {
 
 // Hàm kiểm tra phiếu mượn có quá hạn không (hạn mượn 3 tháng)
 bool isBorrowingOverdue(AVLNode* node) {
-     if (node == NULL) return false; // Trả về false nếu nút rỗng
+    if (node == NULL) return false; // Trả về false nếu nút rỗng
     Borrowing* borrow = (struct Borrowing*)node->data;
     time_t now = time(NULL);//Lấy thời gian hiện tại
     double seconds = difftime(now, mktime(&borrow->Start));//Tính giây
@@ -277,11 +157,16 @@ void WriteReturn(const char *filename, Borrowing* borrow){
     // Mở file
     FILE* file = fopen(filename, "a");
     if (file) {
-        fprintf(file, "%s,%s,%s,%s,%ld,%ld\n", borrow->Code, borrow->IdentifyID, borrow->Title, borrow->Author, mktime(&borrow->Start), mktime(&end));//Ghi dữ liệu
-        fclose(file);
+        fprintf(file, "%s;%s;%s;%s;%d/%d/%d;%d/%d/%dd\n", borrow->Code, 
+            borrow->IdentifyID, borrow->Title, borrow->Author, 
+            borrow->Start.tm_mday, borrow->Start.tm_mon
+            borrow->Start.tm_year,\
+            end.tm_mday, end.tm_mon, end.tm_year));//Ghi dữ liệu
     }
     else 
         printf("Loi khong mo duoc file");
+    fclose(file);
+    return;
 }
 
 // Hàm xóa phiếu mượn và thêm vào file returned.csv
@@ -299,6 +184,7 @@ void deleteBorrowingTicket(char code[6]) {
     bool overdue = isBorrowingOverdue(node);
     if (overdue) {
         printf("Muon qua han, xin hay nop tien phat\n");
+        system("PAUSE");
     }
     // Ghi vao file returned.csv
     WriteReturn("return.csv", borrow);
@@ -306,9 +192,9 @@ void deleteBorrowingTicket(char code[6]) {
     Book* tmp=searchBook(borrow->Title,borrow->Author);
     tmp->Quantity ++; 
 
-    // Cập nhật số lượng sách mượn của bạn đọc
+    // Cập nhật số lượng sách đang mượn của bạn đọc
     Member* tmp1=searchMember(borrow->IdentifyID);
-    tmp1->CurrentQuantity ++;
+    tmp1->CurrentQuantity--;
 
     // Xóa khỏi cây AVL
     HashTableBorrowing[index] = deleteAVL(HashTableBorrowing[index], code, compareString);
@@ -319,10 +205,11 @@ void deleteBorrowingTicket(char code[6]) {
 // Duyệt và ghi dữ liệu bảng băm vào file borrowing.csv (gốc -> trái -> phải)
 void inorderWriteBorrowing(FILE *file, AVLNode *node) {
     if (node == NULL) return;
-    inorderWriteBorrowing(file, node->left);//Duyệt con trái
     Borrowing *borrow = (Borrowing *)node->data;//Duyệt cha
-    fprintf(file, "%s,%s,%s,%s,%ld\n", borrow->Code, borrow->IdentifyID,
-            borrow->Title, borrow->Author, mktime(&borrow->Start));//Ghi dữ liệu
+    fprintf(file, "%s;%s;%s;%s;%d/%d/%d\n", borrow->Code, 
+        borrow->IdentifyID,borrow->Title, borrow->Author, 
+        borrow->Start.tm_mday,borrow->Start.tm_mon,borrow->Start.tm_year);//Ghi dữ liệu
+    inorderWriteBorrowing(file, node->left);//Duyệt con trái
     inorderWriteBorrowing(file, node->right);//Duyệt con phải
 }
 
