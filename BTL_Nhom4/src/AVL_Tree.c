@@ -138,7 +138,7 @@ AVLNode* deleteAVL(AVLNode* root, void *key, CompareFunction cmp) {
     // Tìm vị trí của nút cần xóa
     if (cmp(key, root->key) < 0) {
         root->left = deleteAVL(root->left, key, cmp);
-    } else if (cmp(data, root->data) > 0) {
+    } else if (cmp(key, root->key) > 0) {
         root->right = deleteAVL(root->right, key, cmp);
     } else {
         // Nút cần xóa được tìm thấy

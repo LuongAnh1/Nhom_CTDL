@@ -1,0 +1,4 @@
+book2;author2;5
+duplicate;author;5
+book1;author1;10
+testbook;testauthor;5

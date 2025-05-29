@@ -8,8 +8,7 @@
 //Thêm thành viên
 void InputMember(Member *newMember) {
     char *key = newMember->IdentifyID; // Lấy IdentifyID làm khóa
-    AVLNode *newNode = createNode(newMember,key); // Tạo nút mới cho thành viên
-    InsertAVL(HashTableMember[hash(key)], newNode, key, compareString); // Thêm vào bảng băm
+    HashTableMember[hash(key)] = insertAVL(HashTableMember[hash(key)], newMember, key, compareString); // Thêm vào bảng băm
 }
 // Đọc từ file csv
 void ReadMember(const char *filename) {
@@ -20,6 +19,10 @@ void ReadMember(const char *filename) {
     }
     char line[256];
     while (fgets(line, sizeof(line), file)){
+        // Nếu dòng chỉ chứa ký tự newline (dòng trống)
+        if (strcmp(line, "\n") == 0)
+            continue;
+        line[strcspn(line, "\n")] = '\0';
         Member *newMember = (Member*)malloc(sizeof(Member));
         sscanf(line, "%[^,],%[^,],%d", newMember->IdentifyID, newMember->Name, &newMember->CurrentQuantity);
         InputMember(newMember); // Thêm thành viên vào bảng băm
@@ -62,6 +65,7 @@ void DeleteMember() {
 //------Ghi ra file CSV------
 
 // Hàm duyệt cây AVL 
+
 void inorderWriteMember(FILE *file, AVLNode *node) {
     if (node == NULL) return;
 
@@ -74,7 +78,7 @@ void inorderWriteMember(FILE *file, AVLNode *node) {
 }
 
 void StoreMember() {
-    FILE *file = fopen("Member.csv", "w");
+    FILE *file = fopen("data/Member.csv", "w");
     if (file == NULL) {
         printf("Khong the mo file! Member.csv\n");
         return;
