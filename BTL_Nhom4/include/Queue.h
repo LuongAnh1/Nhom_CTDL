@@ -2,18 +2,29 @@
 #define QUEUE_H
 
 #include "Data.h"
-
-//Chèn node
-void insertNode(char IdentifyID[12], char Title[100], char Author[100], bool order);
-//Lấy thông tin người đầu tiên và xóa
+// Tạo nút Queue 
+Queue* makeNode(char* IdentifyID, char* Title, char* Author, struct tm DecideDate, bool Order);
+// Thêm nút vào hàng đợi 
+void insertNode(char *IdentifyID, char *Title, char *Author, bool Order, struct tm decideDate);
+//Lấy thông tin người đầu tiên
 Queue* getfront(Book *book);
+// Xoá node đầu tiên của cả hai hàng đợi (ưu tiên trước)
 void deleteNode(Book *book);
-
-//Duyệt danh sách người mượn
-void traverse(char Titlee[100], char Author[100]);
-
-//Tìm kiếm người mượn
-Queue* searching(Book* book, char IdentifyyID[12]);
+// Duyệt in cả hai hàng đợi
+void traverse(char* Title, char* Author);
+// Tìm người trong queue1 hoặc queue0 của một cuốn sách
+Queue* searching(Book* book, char* IdentifyyID);
+// Lưu từng nhánh hàng đợi vào file 
+void saveQueueToFileHelper(FILE *f, Queue *q, const char *title, const char *author);
+// Lưu hàng đợi vào file 
+void saveQueueOfBookWithFile(Book *book, void *filePtr);
+// Dùng cho hàm saveAllQueuesToFile
+void traverseAVLWithArg(AVLNode *root, void (*visit)(Book *, void *), void *arg);
+// Duyệt toàn bộ sách để lưu hàng đợi 
+void saveAllQueuesToFile(const char *fileName);
+// Đọc từ file ra 
+void loadQueueFromFile(const char *fileName);
+// Thêm nút vào hàng đợi 
+void insertQueueNode(Book *book, Queue *node);
 
 #endif
-

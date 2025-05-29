@@ -6,7 +6,7 @@
 #define TABLE_SIZE 10
 
 struct Queue{
-    char IdentifyID[12], Title[100], Author[100];
+    char IdentifyID[13], Title[200], Author[200];
     struct tm DecideBorrow; // Thời gian sách đã về và ấn định cho người này
     // Nếu thời gian người này đến lấy sách trễ hơn thời gian này 3 ngày thì sẽ không được mượn sách
     bool Order; // Trạng thái ưu tiêntiên
@@ -17,7 +17,7 @@ typedef struct Queue Queue;
 
 // Định nghĩa cấu trúc đối tượng 
 struct Book{
-    char Title[100], Author[100];
+    char Title[200], Author[200];
     int Quantity;   
     Queue* queue1;
     Queue* queue0; // con trỏ queue để lưu trữ thông tin hàng đợi
@@ -26,14 +26,14 @@ typedef struct Book Book;
 // Cấu trúc Book - dùng để lưu trữ thông tin sách
 
 struct Member{
-    char IdentifyID[12], Name[100];
+    char IdentifyID[13], Name[100];
     int CurrentQuantity; // Số lượng sách đang mượn
 };
 typedef struct Member Member;
 // Cấu trúc Member - dùng để lưu trữ thông tin thành viên
 
 struct Borrowing{
-    char Code[6], IdentifyID[12], Title[100], Author[100];
+    char Code[7], IdentifyID[13], Title[200], Author[200];
     struct tm Start;
     // Ví dụ về cách sử dụng struct tm để lưu trữ thời gian
     // struct tm *local;

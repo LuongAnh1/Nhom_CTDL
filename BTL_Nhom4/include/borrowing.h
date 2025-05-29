@@ -3,7 +3,7 @@
 
 #include <time.h>
 #include <stdbool.h>
-#include "data.h"
+#include "Data.h"
 #include "AVL_Tree.h"
 
 // Biến toàn cục
@@ -18,9 +18,9 @@ void ReadBorrowing(const char *filename);
 void generateCode(char* code);
 
 // Tạo nút borrowing mới 
-Borrowing* createBorrowingNode(char IdentifyID[12], char Title[100], char Author[100], struct tm now);
+Borrowing* createBorrowingNode(char* IdentifyID, char* Title, char* Author, struct tm now);
 // Tham số: identifyID (CCCD bạn đọc), title (tiêu đề sách), author (tác giả sách), now (thời gian mượn)
-void createBorrowingTicket(char IdentifyID[12], char Title[100], char Author[100], struct tm now);
+void createBorrowingTicket(char* IdentifyID, char* Title, char* Author, struct tm now);
 // Tìm phiếu mượn theo mã
 // Trả về nút AVL chứa thông tin phiếu mượn, hoặc NULL nếu không tìm thấy
 AVLNode* searchBorrowingTicket(char* code);
