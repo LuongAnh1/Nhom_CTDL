@@ -77,10 +77,10 @@ void inorderWriteMember(FILE *file, AVLNode *node) {
     inorderWriteMember(file, node->right);
 }
 
-void StoreMember() {
-    FILE *file = fopen("data/Member.csv", "w");
+void StoreMember(const char *filename) {
+    FILE *file = fopen(filename, "w");
     if (file == NULL) {
-        printf("Khong the mo file! Member.csv\n");
+        printf("Khong the mo file!\n");
         return;
     }
 
