@@ -3,17 +3,17 @@
 
 #include "Data.h"
 // Tạo nút Queue 
-Queue* makeNode(char IdentifyID[12], char Title[100], char Author[100], struct tm DecideDate, bool Order);
+Queue* makeNode(char* IdentifyID, char* Title, char* Author, struct tm DecideDate, bool Order);
 // Thêm nút vào hàng đợi 
-void insertNode(const char *IdentifyID, const char *Title, const char *Author, bool Order, struct tm decideDate);
+void insertNode(char *IdentifyID, char *Title, char *Author, bool Order, struct tm decideDate);
 //Lấy thông tin người đầu tiên
 Queue* getfront(Book *book);
 // Xoá node đầu tiên của cả hai hàng đợi (ưu tiên trước)
 void deleteNode(Book *book);
 // Duyệt in cả hai hàng đợi
-void traverse(char Titlee[100], char Author[100]);
+void traverse(char* Title, char* Author);
 // Tìm người trong queue1 hoặc queue0 của một cuốn sách
-Queue* searching(Book* book, char IdentifyyID[12]);
+Queue* searching(Book* book, char* IdentifyyID);
 // Lưu từng nhánh hàng đợi vào file 
 void saveQueueToFileHelper(FILE *f, Queue *q, const char *title, const char *author);
 // Lưu hàng đợi vào file 
@@ -24,5 +24,7 @@ void traverseAVLWithArg(AVLNode *root, void (*visit)(Book *, void *), void *arg)
 void saveAllQueuesToFile(const char *fileName);
 // Đọc từ file ra 
 void loadQueueFromFile(const char *fileName);
+// Thêm nút vào hàng đợi 
+void insertQueueNode(Book *book, Queue *node);
 
 #endif

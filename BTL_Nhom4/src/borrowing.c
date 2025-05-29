@@ -1,12 +1,10 @@
-
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include "borrowing.h"
+#include "Borrowing.h"
 #include "AVL_Tree.h"
-#include "Data.h"
 #include "hash.h"
 #include "Book.h"
 #include "Member.h"
@@ -99,7 +97,7 @@ void generateCode(char* code) {
 //Kết hợp newnode và creatnewnode để đồng bộ vì mục đích là tạo nút borrowing mới
 */
 
-Borrowing* createBorrowingNode(char IdentifyID[12], char Title[100], char Author[100], struct tm now) {
+Borrowing* createBorrowingNode(char* IdentifyID, char* Title, char* Author, struct tm now) {
     Borrowing *newBorrowing = (Borrowing*)malloc(sizeof(Borrowing));//Cấp phát động
     //Kiểm tra cấp phát
     if (newBorrowing == NULL) {
@@ -117,7 +115,7 @@ Borrowing* createBorrowingNode(char IdentifyID[12], char Title[100], char Author
 }
 
 // Hàm tạo phiếu mượn mới
-void createBorrowingTicket(char IdentifyID[12],char Title[100],char Author[100], struct tm now) {
+void createBorrowingTicket(char* IdentifyID, char* Title, char* Author, struct tm now) {
     Member *member = SearchMember(IdentifyID);
     Book *book = searchBook(Title, Author);
 
@@ -133,7 +131,7 @@ void createBorrowingTicket(char IdentifyID[12],char Title[100],char Author[100],
 }
 
 // Hàm tìm phiếu mượn theo mã
-AVLNode* searchBorrowingTicket(char code[6]) {
+AVLNode* searchBorrowingTicket(char* code) {
     // Tính chỉ số bảng băm dựa trên ký tự đầu của mã
     int index = hash(code);
     return searchAVL(HashTableBorrowing[index], code, compareString);//Tìm trong cây AVL
