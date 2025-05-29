@@ -10,7 +10,7 @@ void ReadMember(const char *filename);
 Member* SearchMember(char *IdentifyID);    
 //Xóa thành viên
 void DeleteMember();
-void storeMember();
+void StoreMember();
 // Hàm duyệt cây AVL 
 // void inorderWriteMember(FILE *file, AVLNode *node)
 #endif

@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include <conio.h>   /* _getch() – dùng khi biên dịch trên Windows */
+#include <ctype.h>
 
 #include "Member.h"
 #include "Data.h"
@@ -60,48 +61,55 @@ void QuayLai() {
 
 /* -------------------- HÀM KIỂM TRA GIẢ LẬP ------------------ */
 bool KiemTraMatKhau(const char *pass)       { return strcmp(pass, "2701") == 0; }
-bool TimSach(const char *key1, const char *key2)               { (void)key1, key2; return true; }
-int  SoLuongSach(/*Member* member*/)                          { /*return member->CurrentQuantity;*/return 0;   }
-bool KiemTraThanhVien(const char *id /*char IdentifyID[12]*/) { 
-    /*
-    Member *member = SearchMember(id);
-    if (member != NULL) {
-        return true; // Thành viên đã tồn tại
-    } else {
-        return false; // Thành viên không tồn tại
-    }
-    */
-    (void)id;  
-    return 0; 
+bool TimSach(char *key1, char *key2){
+    Book* book = searchBook(key1, key2);
+    if (book == NULL) return false;
+    else return true;
 }
-int  GetCurrentQuantity(const char *id)     { (void)id;  return 10;   }
+int  SoLuongSach(/*Member* member*/)                          { /*return member->CurrentQuantity;*/return 0;   }
+bool KiemTraThanhVien(char* IdentifyID) { 
+    Member *member = SearchMember(IdentifyID);
+    if (member != NULL)
+        return true; // Thành viên đã tồn tại
+    else 
+        return false; // Thành viên không tồn tại 
+}
+int  GetCurrentQuantity(char *id){
+    Member* member = SearchMember(id);
+    return member->CurrentQuantity;
+}
 bool KiemTraMaMuon(const char *borrowId)    { (void)borrowId; return true; }
 bool KiemTraThuocThuVien()                   { return true; }
 void addMember() {
     ClearScreen();
     puts("---------- THEM THANH VIEN ----------");
     puts("Nhap Can cuoc cong dan: ");
-    char IdentifyID[12];
-    scanf("%15s", IdentifyID); getchar();
+    char IdentifyID[13];
+    scanf("%s", IdentifyID); getchar();
+    // Kiểm tra có nhập cccd đúng không
+    while(sizeof(IdentifyID)!=12){
+        ClearScreen();
+        puts("---------- THEM THANH VIEN ----------");
+        puts("Nhap lai can cuoc cong dan, nhap 0 de thoat");
+        puts("Nhap Can cuoc cong dan: ");
+        char IdentifyID[13];
+        scanf("%s", IdentifyID); getchar();
+        if(*IdentifyID == '0') return;
+    }
     
     puts("Nhap ho ten: ");
-    char Name[100];
+    char Name[200];
     fgets(Name, sizeof Name, stdin);
     Name[strcspn(Name, "\n")] = '\0';
+    trim(Name);
 
-    // Member *newMember = (Member*)malloc(sizeof(Member));
-    // strcpy(newMember->IdentifyID, IdentifyID);
-    // strcpy(newMember->Name, Name);
-    // newMember->CurrentQuantity = 0; /* Giả lập số lượng sách đã mượn là 0 */
-    //InputMember(newMember); /* Giả lập thêm thành viên vào danh sách */
+    Member *newMember = (Member*)malloc(sizeof(Member));
+    strcpy(newMember->IdentifyID, IdentifyID);
+    strcpy(newMember->Name, Name);
+    newMember->CurrentQuantity = 0; /* Giả lập số lượng sách đã mượn là 0 */
+    InputMember(newMember); /* Giả lập thêm thành viên vào danh sách */
     
-
-    puts("Them thanh vien moi thanh cong!"); }
-
-/* CHƯƠNG TRÌNH CHÍNH */
-int main() {
-    Start();
-    return 0;
+    puts("Them thanh vien moi thanh cong!"); 
 }
 
 /* -------------------- MENU GỐC ------------------------------ */
@@ -112,6 +120,7 @@ void Start() {
     puts("Ban muon truy cap voi tu cach la?");
     puts("1. Khach hang");
     puts("2. Nguoi quan ly");
+    puts("3. Thoat chuong trinh");
     printf("Nhap lua chon: ");
 
     int user;
@@ -129,10 +138,13 @@ void Start() {
             else { puts("Sai mat khau!"); QuayLai(); Start(); }
             break;
         }
+        case 3:{
+            // Tải dữ liệu về file .csv và thoát chương trình
+        }
         default:
             puts("Lua chon khong hop le!");
             QuayLai();
-            Start();
+            Start(); // Quay lại Start 
     }
 }
 
@@ -194,14 +206,16 @@ void ThaoTacQuanLy() {
 void TraCuuSach(int action) {
     ClearScreen();
     puts("---------- TRA CUU SACH ----------");
-    char TenSach[100], TacGia[100];
+    char TenSach[200], TacGia[200];
     printf("Nhap ten sach : ");
     fgets(TenSach, sizeof TenSach, stdin);
     TenSach[strcspn(TenSach, "\n")] = '\0';
+    trim(TenSach); // Xóa ký tự trắng đầu và cuối
 
     printf("Nhap ten tac gia: ");
     fgets(TacGia, sizeof TacGia, stdin);
     TacGia[strcspn(TacGia, "\n")] = '\0';
+    trim(TacGia); // Xóa ký tự trắng đầu và cuối
 
     if (!TimSach(TenSach, TacGia)) {
         puts("Khong tim thay sach!");
@@ -209,8 +223,12 @@ void TraCuuSach(int action) {
         return;
     }
 
-    /* Hiển thị thông tin sách - giả lập */
-    puts("\n[Thong tin sach hien thi tai day] ...\n");
+    /* Hiển thị thông tin sách */
+    ClearScreen();
+    printf("Tim thay sach\n");
+    Book* book = searchBook(TenSach, TacGia);
+    printf("Ten sach: %s\nTen tac gia: %s\nSo luong con lai: %d\n",
+            book->Title, book->Author, book->Quantity);
     
     /* Nếu là khách hàng (action==1) hỏi có muốn mượn không */
     if (action == 1) {
@@ -237,9 +255,9 @@ void MuonSach(int action) {
     ClearScreen();
     puts("---------- MUON SACH ----------\n");
 
-    char id[16];
+    char id[13];
     printf("Nhap CCCD: ");
-    scanf("%15s", id); getchar();
+    scanf("%13s", id); getchar();
 
     if (!KiemTraThanhVien(id)) {
         puts("Khong tim thay thanh vien!");
