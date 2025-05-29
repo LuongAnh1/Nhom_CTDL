@@ -2,9 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-//#include "Member.h"
-//#include "Data.h"
+#include <time.h>
 #include <conio.h>   /* _getch() – dùng khi biên dịch trên Windows */
+
+#include "Member.h"
+#include "Data.h"
+#include "AVL_Tree.h"
+#include "Borrowing.h"
+#include "Library_Service.h"
+#include "hash.h"
+#include "Book.h"
+#include "Queue.h"
+
 
 /* =============================================================
    KHAI BÁO HÀM (PROTOTYPE)
