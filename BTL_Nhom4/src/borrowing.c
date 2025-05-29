@@ -17,8 +17,7 @@ char currentCode[6] = "000000";
 //Hàm thêm phiếu mượn vào bảng băm bằng cách tạo nút và chèn vào AVL
 void InputBorrowing(Borrowing *newBorrowing) {
     char *key = newBorrowing->Code; // Lấy Code làm khóa
-    AVLNode *newNode = createNode(newBorrowing,key); // Tạo nút mới cho thành viên
-    HashTableBorrowing[hash(key)] = insertAVL(HashTableBorrowing[hash(key)], newNode, key, compareString); // Thêm vào bảng băm
+    HashTableBorrowing[hash(key)] = insertAVL(HashTableBorrowing[hash(key)], newBorrowing, key, compareString); // Thêm vào bảng băm
 }
 
 // Đọc từ file csv và thêm vào bảng băm
