@@ -3,9 +3,9 @@
 
 #include "Data.h"
 // Tạo nút Queue 
-Queue* makeNode(char* IdentifyID, char* Title, char* Author, struct tm DecideDate, bool Order);
+Queue* makeNode(char* IdentifyID, char* Title, char* Author, bool Order);
 // Thêm nút vào hàng đợi 
-void insertNode(char *IdentifyID, char *Title, char *Author, bool Order, struct tm decideDate);
+void insertNode(char *IdentifyID, char *Title, char *Author, bool Order);
 //Lấy thông tin người đầu tiên
 Queue* getfront(Book *book);
 // Xoá node đầu tiên của cả hai hàng đợi (ưu tiên trước)

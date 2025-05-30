@@ -15,6 +15,8 @@
 #include "Book.h"
 #include "Queue.h"
 
+// Biến lưu giá trị tạm thời
+Book* book_search;
 
 /* =============================================================
    KHAI BÁO HÀM (PROTOTYPE)
@@ -35,8 +37,8 @@ void   TraSach  (int action);
 /* hàm kiểm tra/giả lập dữ liệu – hiện trả về true hoặc giá trị cố định */
 bool   TimSach(const char *key1, const char *key2);
 int    SoLuongSach(); /* giả lập số lượng sách còn trong thư viện */
-bool   KiemTraThanhVien(const char *id);
-int    GetCurrentQuantity(const char *id);
+bool   KiemTraThanhVien(char *id);
+int    GetCurrentQuantity(char *id);
 bool   KiemTraMatKhau(const char *pass);
 bool   KiemTraMaMuon(const char *borrowId);
 bool   KiemTraThuocThuVien();
@@ -61,13 +63,15 @@ void QuayLai() {
 
 /* -------------------- HÀM KIỂM TRA GIẢ LẬP ------------------ */
 bool KiemTraMatKhau(const char *pass)       { return strcmp(pass, "2701") == 0; }
-bool TimSach(char *key1, char *key2){
-    Book* book = searchBook(key1, key2);
+bool TimSach(const char *key1,const char *key2){
+    book_search = searchBook(key1, key2);
     if (book == NULL) return false;
     else return true;
 }
-int  SoLuongSach(/*Member* member*/)                          { /*return member->CurrentQuantity;*/return 0;   }
-bool KiemTraThanhVien(char* IdentifyID) { 
+int  SoLuongSach(){
+    return book_search->Quantity; 
+}
+bool KiemTraThanhVien(char *IdentifyID) { 
     Member *member = SearchMember(IdentifyID);
     if (member != NULL)
         return true; // Thành viên đã tồn tại
@@ -110,6 +114,7 @@ void addMember() {
     InputMember(newMember); /* Giả lập thêm thành viên vào danh sách */
     
     puts("Them thanh vien moi thanh cong!"); 
+    QuayLai();
 }
 
 /* -------------------- MENU GỐC ------------------------------ */
@@ -265,7 +270,8 @@ void MuonSach(int action) {
         printf("Dang ky thanh vien moi? (Y/N): ");
         scanf(" %c", &choice); getchar();
         if (choice == 'Y' || choice == 'y') addMember();
-        QuayLai();
+        else 
+            QuayLai();
         return; 
     }
     /*Nếu tìm thấy thành viên sẽ thực hiện lệnh dưới   */
@@ -321,7 +327,7 @@ void TraSach(int action) {
 
     char borrowId[16];
     printf("Nhap ma muon sach: ");
-    scanf("%15s", borrowId); getchar();
+    scanf("%s", borrowId); getchar();
 
     if (!KiemTraMaMuon(borrowId)) {
         puts("Ma muon sach khong ton tai!");

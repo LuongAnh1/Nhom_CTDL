@@ -51,6 +51,8 @@ void ReadBorrowing(const char *filename) {
             &newBorrowing->Start.tm_mday,
             &newBorrowing->Start.tm_mon,
             &newBorrowing->Start.tm_year);
+        newBorrowing->Start.tm_mon = newBorrowing->Start.tm_mon - 1;
+        newBorrowing->Start.tm_year = newBorrowing->Start.tm_year -1900;
         InputBorrowing(newBorrowing); // Thêm vào bảng băm
     }
     fclose(file);
@@ -65,6 +67,7 @@ void generateCode(char* code) {
     strcpy(code, currentCode);
 }
 
+// Tạo nút Borrowing mới 
 Borrowing* createBorrowingNode(char* IdentifyID, char* Title, char* Author, struct tm now) {
     Borrowing *newBorrowing = (Borrowing*)malloc(sizeof(Borrowing));//Cấp phát động
     //Kiểm tra cấp phát
@@ -124,9 +127,9 @@ void WriteReturn(const char *filename, Borrowing* borrow){
     if (file) {
         fprintf(file, "%s;%s;%s;%s;%d/%d/%d;%d/%d/%dd\n", borrow->Code, 
             borrow->IdentifyID, borrow->Title, borrow->Author, 
-            borrow->Start.tm_mday, borrow->Start.tm_mon,
-            borrow->Start.tm_year,
-            end.tm_mday, end.tm_mon, end.tm_year);//Ghi dữ liệu
+            borrow->Start.tm_mday, borrow->Start.tm_mon + 1,
+            borrow->Start.tm_year + 1900,
+            end.tm_mday, end.tm_mon + 1, end.tm_year + 1900);//Ghi dữ liệu
     }
     else 
         printf("Loi khong mo duoc file");

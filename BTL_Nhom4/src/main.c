@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "Data.h"
 #include "AVL_Tree.h"
-// #include "Libarary_Service.h"
+#include "Library_Service.h"
 #include "Member.h"
 #include "Book.h"
 #include "Borrowing.h"
@@ -30,7 +30,8 @@ int main() {
     loadQueueFromFile("data/queue.csv");
     printf("Tai du lieu thanh cong\n");
     system("PAUSE");
-    // Start();
+    // Chạy giao diện 
+    Start();
     // Tải dữ liệu từ bảng băm về file .csv 
     saveAllQueuesToFile("data/queue.csv"); 
     storeBorrowing("data/borrowing.csv");

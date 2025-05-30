@@ -3,26 +3,26 @@
 #include <stdlib.h>
 #include <string.h>
 // Tạo nút Queue 
-Queue* makeNode(char* IdentifyID, char* Title, char* Author, struct tm DecideDate, bool Order){
+Queue* makeNode(char* IdentifyID, char* Title, char* Author, bool Order){
     Queue *newNode = (Queue*)malloc(sizeof(Queue));
     strcpy(newNode->IdentifyID, IdentifyID);
     strcpy(newNode->Title, Title);
     strcpy(newNode->Author, Author);
     newNode->Order = Order;
-    newNode->DecideBorrow = DecideDate;
+    memset(&newNode->DecideBorrow, 0, sizeof(struct tm));
     newNode->next = NULL;
     return newNode;
 }
 
 // Thêm nút vào hàng đợi 
-void insertNode(char *IdentifyID, char *Title, char *Author, bool Order, struct tm DecideDate) {
+void insertNode(char *IdentifyID, char *Title, char *Author, bool Order) {
     Book *book = searchBook(Title, Author);
     if (book == NULL) {
         printf("Khong tim thay sach: %s - %s\n", Title, Author);
         return;
     }
 
-    Queue *newNode = makeNode(IdentifyID, Title, Author, DecideDate, Order);
+    Queue *newNode = makeNode(IdentifyID, Title, Author, Order);
 
     if (Order) {
         // chen vao queue1 (uu tien)
