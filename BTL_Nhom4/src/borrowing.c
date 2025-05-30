@@ -172,7 +172,7 @@ typedef struct queue{
     AVLNode* node;
     struct queue *next;
 } queue;
-queue* createNodequeue(AVLNode *node){
+queue* createNodequeueBorrowing(AVLNode *node){
     queue* newNode = (queue*)malloc(sizeof(queue));
     newNode->node = node;
     newNode->next = NULL;
@@ -182,16 +182,16 @@ queue* createNodequeue(AVLNode *node){
 void inorderWriteBorrowing(FILE *file, AVLNode *node) {
     if (node == NULL) return;
 
-    queue* head = createNodequeue(node);
+    queue* head = createNodequeueBorrowing(node);
     queue* tail = head;
 
     while (head != NULL) {
         if (head->node->left != NULL) {
-            tail->next = createNodequeue(head->node->left);
+            tail->next = createNodequeueBorrowing(head->node->left);
             tail = tail->next;
         }
         if (head->node->right != NULL) {
-            tail->next = createNodequeue(head->node->right);
+            tail->next = createNodequeueBorrowing(head->node->right);
             tail = tail->next;
         }
 

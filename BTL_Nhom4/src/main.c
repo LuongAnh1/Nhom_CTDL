@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "Data.h"
 #include "AVL_Tree.h"
-#include "Libarary_Service.h"
+// #include "Libarary_Service.h"
 #include "Member.h"
 #include "Book.h"
 // #include <windows.h>
@@ -21,7 +21,7 @@ AVLNode *HashTableBorrowing[TABLE_SIZE] = {NULL};
 
 // Chỗ này cần có thêm hàm xử lý xâu để so sánh, với Book thì key = <Title>_<Author>
 int main() {
-    Start();
+    // Start();
     // ReadMember("Member.csv");
     // addMember();
     // storeMember();

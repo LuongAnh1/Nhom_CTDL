@@ -137,7 +137,7 @@ typedef struct queue{
     AVLNode* node;
     struct queue *next;
 } queue;
-queue* createNodequeue(AVLNode *node){
+queue* createNodequeueBook(AVLNode *node){
     queue* newNode = (queue*)malloc(sizeof(queue));
     newNode->node = node;
     newNode->next = NULL;
@@ -147,16 +147,16 @@ queue* createNodequeue(AVLNode *node){
 void saveBookToFileHelper(AVLNode *node,FILE *file) {
     if (node == NULL) return;
 
-    queue* head = createNodequeue(node);
+    queue* head = createNodequeueBook(node);
     queue* tail = head;
 
     while (head != NULL) {
         if (head->node->left != NULL) {
-            tail->next = createNodequeue(head->node->left);
+            tail->next = createNodequeueBook(head->node->left);
             tail = tail->next;
         }
         if (head->node->right != NULL) {
-            tail->next = createNodequeue(head->node->right);
+            tail->next = createNodequeueBook(head->node->right);
             tail = tail->next;
         }
 

@@ -70,7 +70,7 @@ typedef struct queue{
     AVLNode* node;
     struct queue *next;
 } queue;
-queue* createNodequeue(AVLNode *node){
+queue* createNodequeueMember(AVLNode *node){
     queue* newNode = (queue*)malloc(sizeof(queue));
     newNode->node = node;
     newNode->next = NULL;
@@ -80,16 +80,16 @@ queue* createNodequeue(AVLNode *node){
 void inorderWriteMember(FILE *file, AVLNode *node) {
     if (node == NULL) return;
 
-    queue* head = createNodequeue(node);
+    queue* head = createNodequeueMember(node);
     queue* tail = head;
 
     while (head != NULL) {
         if (head->node->left != NULL) {
-            tail->next = createNodequeue(head->node->left);
+            tail->next = createNodequeueMember(head->node->left);
             tail = tail->next;
         }
         if (head->node->right != NULL) {
-            tail->next = createNodequeue(head->node->right);
+            tail->next = createNodequeueMember(head->node->right);
             tail = tail->next;
         }
 
