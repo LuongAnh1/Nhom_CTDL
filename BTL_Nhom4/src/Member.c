@@ -66,16 +66,42 @@ void DeleteMember() {
 
 // Hàm duyệt cây AVL 
 
+typedef struct queue{
+    AVLNode* node;
+    struct queue *next;
+} queue;
+queue* createNodequeue(AVLNode *node){
+    queue* newNode = (queue*)malloc(sizeof(queue));
+    newNode->node = node;
+    newNode->next = NULL;
+    return newNode;
+}
+// Ghi dữ liệu theo chiều rộng 
 void inorderWriteMember(FILE *file, AVLNode *node) {
     if (node == NULL) return;
 
-    Member *member = (Member *)node->data;
-    fprintf(file, "%s,%s,%d\n", member->IdentifyID, member->Name, member->CurrentQuantity);
-    
-    inorderWriteMember(file, node->left);
+    queue* head = createNodequeue(node);
+    queue* tail = head;
 
-    inorderWriteMember(file, node->right);
+    while (head != NULL) {
+        if (head->node->left != NULL) {
+            tail->next = createNodequeue(head->node->left);
+            tail = tail->next;
+        }
+        if (head->node->right != NULL) {
+            tail->next = createNodequeue(head->node->right);
+            tail = tail->next;
+        }
+
+        Member* member = head->node->data;
+        fprintf(file, "%s,%s,%d\n", member->IdentifyID, member->Name, member->CurrentQuantity);
+
+        queue* tmp = head;
+        head = head->next;
+        free(tmp);
+    }
 }
+
 
 void StoreMember(const char *filename) {
     FILE *file = fopen(filename, "w");

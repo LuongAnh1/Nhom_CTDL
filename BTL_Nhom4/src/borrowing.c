@@ -64,38 +64,6 @@ void generateCode(char* code) {
     sprintf(currentCode, "%06d", num); // Đảm bảo chuỗi 6 chữ số
     strcpy(code, currentCode);
 }
-/*
-// // Tạo nút Borrowing mới
-// Borrowing* newNode(char IdentifyID[12],char Title[100],char Author[100],  time_t now){
-//     Borrowing *newBorrowing = (Borrowing*)malloc(sizeof(Borrowing));
-//     strcpy(newBorrowing->IdentifyID, IdentifyID);
-//     strcpy(newBorrowing->Title, Title);
-//     strcpy(newBorrowing->Author, Author);
-
-//     // Tạo mã phiếu mượn
-//     generateCode(newBorrowing->Code);
-
-//     // Thoi gian la nhap
-//    newBorrowing->Start = *localtime(&now);
-//     return newBorrowing;
-// }
-
-// // Tạo dữ liệu
-// Borrowing* CreateNode(char IdentifyID[12],char Title[100],char Author[100], time_t now){
-//     Borrowing* newBorrowing;
-//     strcpy(newBorrowing->IdentifyID, IdentifyID);
-//     strcpy(newBorrowing->Title, Title);
-//     strcpy(newBorrowing->Author, Author);
-//     return newBorrowing;
-//     // Tạo mã phiếu mượn
-//     generateCode(newBorrowing->Code);
-
-//     // Lấy thời gian hiện tại (thời nhập chứu không lấy dữ liệu từ máy nữa)
-//     newBorrowing->Start = *localtime(&now);
-// }
-
-//Kết hợp newnode và creatnewnode để đồng bộ vì mục đích là tạo nút borrowing mới
-*/
 
 Borrowing* createBorrowingNode(char* IdentifyID, char* Title, char* Author, struct tm now) {
     Borrowing *newBorrowing = (Borrowing*)malloc(sizeof(Borrowing));//Cấp phát động
@@ -199,15 +167,43 @@ void deleteBorrowingTicket(char code[6]) {
     storeBorrowing();
 }
 
-// Duyệt và ghi dữ liệu bảng băm vào file borrowing.csv (gốc -> trái -> phải)
+// Duyệt và ghi dữ liệu bảng băm vào file borrowing.csv theo chiều rộng 
+typedef struct queue{
+    AVLNode* node;
+    struct queue *next;
+} queue;
+queue* createNodequeue(AVLNode *node){
+    queue* newNode = (queue*)malloc(sizeof(queue));
+    newNode->node = node;
+    newNode->next = NULL;
+    return newNode;
+}
+// Ghi dữ liệu theo chiều rộng 
 void inorderWriteBorrowing(FILE *file, AVLNode *node) {
     if (node == NULL) return;
-    Borrowing *borrow = (Borrowing *)node->data;//Duyệt cha
-    fprintf(file, "%s;%s;%s;%s;%d/%d/%d\n", borrow->Code, 
+
+    queue* head = createNodequeue(node);
+    queue* tail = head;
+
+    while (head != NULL) {
+        if (head->node->left != NULL) {
+            tail->next = createNodequeue(head->node->left);
+            tail = tail->next;
+        }
+        if (head->node->right != NULL) {
+            tail->next = createNodequeue(head->node->right);
+            tail = tail->next;
+        }
+
+        Borrowing* borrow = head->node->data;
+        fprintf(file, "%s;%s;%s;%s;%d/%d/%d\n", borrow->Code, 
         borrow->IdentifyID,borrow->Title, borrow->Author, 
         borrow->Start.tm_mday,borrow->Start.tm_mon,borrow->Start.tm_year);//Ghi dữ liệu
-    inorderWriteBorrowing(file, node->left);//Duyệt con trái
-    inorderWriteBorrowing(file, node->right);//Duyệt con phải
+
+        queue* tmp = head;
+        head = head->next;
+        free(tmp);
+    }
 }
 
 //Hàm ghi toàn bộ dữ liệu bảng băm vào file borrowing.csv

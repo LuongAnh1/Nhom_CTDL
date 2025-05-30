@@ -132,12 +132,41 @@ void loadBooksFromFile(const char *fileName) {
     fclose(f);
 }
 
-void saveBookToFileHelper(AVLNode *root, FILE *f) {
-    if (!root) return;
-    saveBookToFileHelper(root->left, f);
-    Book *book = (Book *)root->data;
-    fprintf(f, "%s;%s;%d\n", book->Title, book->Author, book->Quantity);
-    saveBookToFileHelper(root->right, f);
+// Ghi dữ liệu vào file 
+typedef struct queue{
+    AVLNode* node;
+    struct queue *next;
+} queue;
+queue* createNodequeue(AVLNode *node){
+    queue* newNode = (queue*)malloc(sizeof(queue));
+    newNode->node = node;
+    newNode->next = NULL;
+    return newNode;
+}
+// Ghi dữ liệu theo chiều rộng 
+void saveBookToFileHelper(AVLNode *node,FILE *file) {
+    if (node == NULL) return;
+
+    queue* head = createNodequeue(node);
+    queue* tail = head;
+
+    while (head != NULL) {
+        if (head->node->left != NULL) {
+            tail->next = createNodequeue(head->node->left);
+            tail = tail->next;
+        }
+        if (head->node->right != NULL) {
+            tail->next = createNodequeue(head->node->right);
+            tail = tail->next;
+        }
+
+        Book* book = head->node->data;
+        fprintf(file, "%s;%s;%d\n", book->Title,book->Author,book->Quantity);
+
+        queue* tmp = head;
+        head = head->next;
+        free(tmp);
+    }
 }
 
 void saveToFile(const char *fileName) {
