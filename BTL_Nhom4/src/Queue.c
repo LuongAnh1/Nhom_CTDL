@@ -113,25 +113,37 @@ Queue* searching(Book* book, char* IdentifyID) {
     return NULL; // Không tìm thấy
 }
 // Lưu từng nhánh hàng đợi vào file 
-void saveQueueToFileHelper(FILE *f, Queue *q, const char *title, const char *author) {
+void saveQueueToFileHelper(FILE *f, Queue *q) {
     while (q) {
-        fprintf(f, "%s;%s;%s;%d/%d/%d;%d\n", q->IdentifyID, title, author, 
-            q->DecideBorrow.tm_mday, q->DecideBorrow.tm_mon,q->DecideBorrow.tm_year,
+        const char *id = (q->IdentifyID[0]) ? q->IdentifyID : "NULL";
+        const char *title = (q->Title[0]) ? q->Title : "NULL";
+        const char *author = (q->Author[0]) ? q->Author : "NULL";
+        fprintf(f, "%s;%s;%s;%d/%d/%d;%d\n", 
+            id, title, author, 
+            q->DecideBorrow.tm_mday, 
+            q->DecideBorrow.tm_mon + 1, 
+            q->DecideBorrow.tm_year + 1900, 
             q->Order);
         q = q->next;
     }
 }
+
+
 // Lưu hàng đợi của sách vào file (hàng đợi ưu tiên vào không ưu tiên) 
 void saveQueueOfBookWithFile(Book *book, void *filePtr) {
     FILE *f = (FILE *)filePtr;
     if (!book || !f) return;
-    saveQueueToFileHelper(f, book->queue1, book->Title, book->Author);
-    saveQueueToFileHelper(f, book->queue0, book->Title, book->Author);
+    saveQueueToFileHelper(f, book->queue1);
+    saveQueueToFileHelper(f, book->queue0);
 }
 // Dùng cho hàm saveAllQueuesToFile
 void traverseAVLWithArg(AVLNode *root, void (*visit)(Book *, void *), void *arg) {
     if (!root) return;
     traverseAVLWithArg(root->left, visit, arg);
+    if (root->data == NULL) {
+        printf("LỖI: root->data == NULL\n");
+        return;
+    }
     visit((Book *)root->data, arg);
     traverseAVLWithArg(root->right, visit, arg);
 }
@@ -142,10 +154,10 @@ void saveAllQueuesToFile(const char *fileName) {
         printf("Khong the mo file %s de ghi!\n", fileName);
         return;
     }
-    for (int i = 0; i < TABLE_SIZE; ++i) {
-        traverseAVLWithArg(HashTableBook[i], saveQueueOfBookWithFile, f);
-
-    }
+    for (int i = 0; i < TABLE_SIZE; ++i) 
+        if(HashTableBook[i]){
+            traverseAVLWithArg(HashTableBook[i], saveQueueOfBookWithFile, f);
+        }
     fclose(f);
 }
 // Đọc từ file ra 
@@ -164,10 +176,11 @@ void loadQueueFromFile(const char *fileName) {
         line[strcspn(line, "\n")] = '\0'; // Xóa ký tự xuống dòng 
         Queue *newNode = (Queue *)malloc(sizeof(Queue));
 
-        sscanf(line, "%11[^,];%99[^,];%99[^,];%d/%d/%d;%d",
-               newNode->IdentifyID, newNode->Title, newNode->Author,
-               newNode->DecideBorrow.tm_mday,newNode->DecideBorrow.tm_mon,
-               newNode->DecideBorrow.tm_year ,newNode->Order);
+        sscanf(line, "%12[^;];%199[^;];%199[^;];%d/%d/%d;%d",
+                newNode->IdentifyID, newNode->Title, newNode->Author,
+                &newNode->DecideBorrow.tm_mday, &newNode->DecideBorrow.tm_mon,
+                &newNode->DecideBorrow.tm_year, &newNode->Order);
+
         newNode->next = NULL;
 
         Book *book = (Book *)searchBook(newNode->Title, newNode->Author);

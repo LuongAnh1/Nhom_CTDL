@@ -135,7 +135,7 @@ void WriteReturn(const char *filename, Borrowing* borrow){
 }
 
 // Hàm xóa phiếu mượn và thêm vào file returned.csv
-void deleteBorrowingTicket(char code[6]) {
+void deleteBorrowingTicket(char* code) {
     // Tính chỉ số bảng băm dựa trên ký tự đầu của mã
     int index = hash(code);
     AVLNode* node = searchBorrowingTicket(code);//Tìm phiếu mượn
@@ -163,8 +163,6 @@ void deleteBorrowingTicket(char code[6]) {
 
     // Xóa khỏi cây AVL
     HashTableBorrowing[index] = deleteAVL(HashTableBorrowing[index], code, compareString);
-    // Cập nhật file borrowing.csv
-    storeBorrowing();
 }
 
 // Duyệt và ghi dữ liệu bảng băm vào file borrowing.csv theo chiều rộng 
@@ -207,9 +205,9 @@ void inorderWriteBorrowing(FILE *file, AVLNode *node) {
 }
 
 //Hàm ghi toàn bộ dữ liệu bảng băm vào file borrowing.csv
-void storeBorrowing() {
+void storeBorrowing(const char *filename) {
     //Mở file ở chế độ ghi đè
-    FILE *file = fopen("borrowing.csv", "w");
+    FILE *file = fopen(filename, "w");
     if (file == NULL) {
         printf("Loi khong mo duoc file borrowing.csv\n");
         return;

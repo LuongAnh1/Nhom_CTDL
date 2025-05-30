@@ -32,9 +32,9 @@ bool isBorrowingOverdue(struct AVLNode* node);
 void WriteReturn(const char *filename, Borrowing* borrow);
 // Xóa phiếu mượn và thêm vào file returned.csv
 void deleteBorrowingTicket(char* code);
-// Duyệt và ghi dữ liệu bảng băm vào file borrowing.csv (gốc -> trái -> phải)
+// Duyệt và ghi dữ liệu bảng băm vào file borrowing.csv
 void inorderWriteBorrowing(FILE *file, AVLNode *node);
 // Ghi dữ liệu bảng băm vào file borrowing.csv
-void storeBorrowing();
+void storeBorrowing(const char *filename);
 
 #endif

@@ -15,7 +15,7 @@ void traverse(char* Title, char* Author);
 // Tìm người trong queue1 hoặc queue0 của một cuốn sách
 Queue* searching(Book* book, char* IdentifyyID);
 // Lưu từng nhánh hàng đợi vào file 
-void saveQueueToFileHelper(FILE *f, Queue *q, const char *title, const char *author);
+void saveQueueToFileHelper(FILE *f, Queue *q);
 // Lưu hàng đợi vào file 
 void saveQueueOfBookWithFile(Book *book, void *filePtr);
 // Dùng cho hàm saveAllQueuesToFile

@@ -7,6 +7,8 @@
 // #include "Libarary_Service.h"
 #include "Member.h"
 #include "Book.h"
+#include "Borrowing.h"
+#include "Queue.h"
 // #include <windows.h>
 
 /*
@@ -21,7 +23,22 @@ AVLNode *HashTableBorrowing[TABLE_SIZE] = {NULL};
 
 // Chỗ này cần có thêm hàm xử lý xâu để so sánh, với Book thì key = <Title>_<Author>
 int main() {
+    // Tải dữ liệu lên bảng băm 
+    ReadMember("data/member.csv");
+    loadBooksFromFile("data/book.csv");
+    ReadBorrowing("data/borrowing.csv");
+    loadQueueFromFile("data/queue.csv");
+    printf("Tai du lieu thanh cong\n");
+    system("PAUSE");
     // Start();
+    // Tải dữ liệu từ bảng băm về file .csv 
+    saveAllQueuesToFile("data/queue.csv"); 
+    storeBorrowing("data/borrowing.csv");
+    saveToFile("data/book.csv");
+    StoreMember("data/member.csv");
+    printf("Luu du lieu thanh cong\n");
+    system("PAUSE");
+
     // ReadMember("Member.csv");
     // addMember();
     // storeMember();

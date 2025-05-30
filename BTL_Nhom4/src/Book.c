@@ -126,7 +126,8 @@ void loadBooksFromFile(const char *fileName) {
         token = strtok(NULL, ";");
         if (!token) continue;
         book.Quantity = atoi(token);
-
+        book.queue0 = NULL;
+        book.queue1 = NULL;
         insertBook(book);
     }
     fclose(f);
