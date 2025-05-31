@@ -95,7 +95,7 @@ void traverseAVL(AVLNode *root, void (*visit)(Book *)) {
 
 // Hàm hiển thị tất cả sách
 void displayAllBooks() {
-    printf("%-30s | %-20s | %s\n", "Tiêu đề", "Tác giả", "Số lượng");
+    printf("%-30s | %-20s | %s\n", "Tieu de", "Tac gia", "So luong");
     printf("--------------------------------------------------------------\n");
     for (int i = 0; i < TABLE_SIZE; ++i) {
         traverseAVL(HashTableBook[i], printBook);

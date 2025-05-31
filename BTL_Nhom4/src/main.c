@@ -31,7 +31,7 @@ int main() {
     printf("Tai du lieu thanh cong\n");
     system("PAUSE");
     // Chạy giao diện 
-    Start();
+    LibraryUI();
     // Tải dữ liệu từ bảng băm về file .csv 
     saveAllQueuesToFile("data/queue.csv"); 
     storeBorrowing("data/borrowing.csv");
