@@ -125,7 +125,7 @@ void WriteReturn(const char *filename, Borrowing* borrow){
     // Mở file
     FILE* file = fopen(filename, "a");
     if (file) {
-        fprintf(file, "%s;%s;%s;%s;%d/%d/%d;%d/%d/%dd\n", borrow->Code, 
+        fprintf(file, "%s;%s;%s;%s;%d/%d/%d;%d/%d/%d\n", borrow->Code, 
             borrow->IdentifyID, borrow->Title, borrow->Author, 
             borrow->Start.tm_mday, borrow->Start.tm_mon + 1,
             borrow->Start.tm_year + 1900,
@@ -155,7 +155,7 @@ void deleteBorrowingTicket(char* code) {
         system("PAUSE");
     }
     // Ghi vao file returned.csv
-    WriteReturn("return.csv", borrow);
+    WriteReturn("data/returned.csv", borrow);
     // Cập nhật số lượng sách trong book.csv
     Book* tmp=searchBook(borrow->Title,borrow->Author);
     tmp->Quantity ++; 
@@ -166,6 +166,7 @@ void deleteBorrowingTicket(char* code) {
 
     // Xóa khỏi cây AVL
     HashTableBorrowing[index] = deleteAVL(HashTableBorrowing[index], code, compareString);
+    printf("Tra sach thanh cong\n");
 }
 
 // Duyệt và ghi dữ liệu bảng băm vào file borrowing.csv theo chiều rộng 

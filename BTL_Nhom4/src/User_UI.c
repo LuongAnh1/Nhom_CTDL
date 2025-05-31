@@ -8,15 +8,18 @@
 #include "Queue.h"
 #include "Library_Service.h"
 
+/* KHAI BÁO HÀM */
 void Tra_Cuu_Sach(char* title, char* author);
 void Muon_Sach(char* id, char* title, char* author);
 void Tra_Cuu_Hang_Doi(char* title, char* author);
 void Dang_Ky_Hang_Doi(char* id,char* title,char* author);
 void Dang_Ky_Thanh_Vien(char* id);
+void Tra_Sach(char* code);
 
+/* HÀM GIAO DIỆN NGƯỜI DÙNG */
 void UserUI() {
     int choice;
-    char id[13], title[200], author[200];
+    char id[13], title[200], author[200], code[7];;
     time_t t = time(NULL);
     struct tm now = *localtime(&t);
 
@@ -30,6 +33,7 @@ void UserUI() {
         printf("5. Tra cuu trang thai muon\n");
         printf("6. Xem hang doi muon sach\n");
         printf("7. Dang ky thanh vien\n");
+        printf("8. Tra sach\n");
         printf("0. Quay lai\n");
         printf("Lua chon: ");
         scanf("%d", &choice);
@@ -50,7 +54,6 @@ void UserUI() {
                 break;
             case 5:
                 printf("Nhap ma phieu muon: ");
-                char code[7];
                 fgets(code, 7, stdin); code[strcspn(code, "\n")] = '\0';
                 AVLNode *node = searchBorrowingTicket(code);
                 if (node) {
@@ -61,12 +64,16 @@ void UserUI() {
                 } else {
                     printf("Khong tim thay phieu.\n");
                 }
+                system("PAUSE");
                 break;
             case 6:
                 Tra_Cuu_Hang_Doi(title,author);
                 break;
             case 7:
                 Dang_Ky_Thanh_Vien(id);
+                break;
+            case 8:
+                Tra_Sach(code);
                 break;
             case 0:
                 return;
@@ -184,6 +191,7 @@ void Muon_Sach(char* id, char* title, char* author) {
     now.tm_year = now.tm_year - 1900;
     createBorrowingTicket(id, title, author, now);
     printf("Ban da muon sach thanh cong!!\n");
+    printf("Ma muon sach cua ban la: %s\n",currentCode);
     system("PAUSE");
     return;
 }
@@ -280,4 +288,63 @@ void Dang_Ky_Thanh_Vien(char* id){
     printf("Da them thanh vien thanh cong\n");
     system("PAUSE");
     return;
+}
+
+/* TRẢ SÁCH */
+void Tra_Sach(char* code){
+    ClearScreen();
+    printf("========== TRA SACH ==========\n");
+    printf("Nhap ma phieu muon: ");
+    fgets(code, 7, stdin); code[strcspn(code, "\n")] = '\0';
+    AVLNode *node = searchBorrowingTicket(code);
+
+    if (node == NULL){
+        printf("Khong tim thay ma muon\n");
+        system("PAUSE");
+        return;
+    }
+    Borrowing* borrow = (Borrowing*)node->data;
+    Book* book = searchBook(borrow->Title,borrow->Author);
+
+    // Xóa mã mượn và đưa vào returned.csv 
+    deleteBorrowingTicket(code);
+    
+    // Kiểm tra còn ai trong hàng đợi ko để ấn định sách 
+    Queue* queue = getfront(book); // Lấy thông tin người đầu tiên trong hàng đợi
+    time_t t = time(NULL);
+    if (queue != NULL){
+        // Xóa những người quá hạn đến lấy (7 ngày)
+        do{
+            struct tm decidedorrow = queue->DecideBorrow;
+            time_t t1 = mktime(&decidedorrow);
+            double seconds = difftime(t, t1);
+            if ((int)seconds/(60 * 60 * 24) >= 7){
+                book->Quantity++;
+                deleteNode(book); // Xóa người quá hạn đến lấy ra khỏi hàng đợi 
+                queue = getfront(book);
+            }
+            else break;
+        }while(queue != NULL);
+    }
+    // Kiểm tra lại tỏng hàng đợi có ai chưa có sách được ấn đinh không
+    if (book->Quantity > 0){
+        struct tm t2 = *localtime(&t);
+        queue = book->queue1;
+        while(queue != NULL && book->Quantity > 0){
+            if (queue->DecideBorrow.tm_year == 0){
+                book->Quantity--;
+                queue->DecideBorrow = t2; // Lấy ngày hiện tại 
+            }
+            queue = queue->next;
+        }
+        queue = book->queue0;
+        while(queue != NULL && book->Quantity > 0){
+            if (queue->DecideBorrow.tm_year == 0){
+                book->Quantity--;
+                queue->DecideBorrow = t2; // Lấy ngày hiện tại 
+            }
+            queue = queue->next;
+        }
+    }
+    system("PAUSE");
 }
