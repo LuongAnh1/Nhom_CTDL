@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Library_Service.h"
+
 void ClearScreen(){
     printf("\033[H\033[J");
 }
+
 void LibraryUI() {
     int choice;
     do {

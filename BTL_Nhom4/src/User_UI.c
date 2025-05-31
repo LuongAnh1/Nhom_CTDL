@@ -19,7 +19,7 @@ void Tra_Sach(char* code);
 /* HÀM GIAO DIỆN NGƯỜI DÙNG */
 void UserUI() {
     int choice;
-    char id[13], title[200], author[200], code[7];;
+    char id[13], title[200], author[200], code[7];
     time_t t = time(NULL);
     struct tm now = *localtime(&t);
 
@@ -29,7 +29,7 @@ void UserUI() {
         printf("1. Xem toan bo sach\n");
         printf("2. Tra cuu sach\n");
         printf("3. Dang ky muon sach\n");
-        printf("4. Dang ky vao hang doi\n");
+        printf("4. Dang ky vao hang doi\n"); // QueueQueue
         printf("5. Tra cuu trang thai muon\n");
         printf("6. Xem hang doi muon sach\n");
         printf("7. Dang ky thanh vien\n");
@@ -156,7 +156,7 @@ void Muon_Sach(char* id, char* title, char* author) {
             else break;
         }while(queue != NULL);
     }
-    // Kiểm tra lại tỏng hàng đợi có ai chưa có sách được ấn đinh không
+    // Kiểm tra lại trong hàng đợi có ai chưa có sách được ấn đinh không
     if (book->Quantity > 0){
         time_t t = time(NULL);
         struct tm t2 = *localtime(&t);
@@ -220,6 +220,7 @@ void Tra_Cuu_Hang_Doi(char* title, char* author){
         scanf("%c",&c);
     }while(c == 'Y' || c == 'y');
 }
+
 /* ĐĂNG KÝ VAO HÀNG ĐỢI */
 void Dang_Ky_Hang_Doi(char* id,char* title,char* author){
     ClearScreen();

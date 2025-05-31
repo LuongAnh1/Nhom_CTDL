@@ -15,7 +15,7 @@ void AdminUI() {
     int choice;
     do {
         ClearScreen();
-        printf("=========== CHUONG TRINH QUAN LY THU VIEN ===========\n");
+        printf("=========== CHUONG TRINH QUAN LY THU VIEN CHO ADMIN ===========\n");
         printf("1. Quan ly sach\n");
         printf("2. Quan ly thanh vien\n");
         printf("3. Quan ly muon/tra sach\n");
