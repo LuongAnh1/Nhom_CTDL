@@ -10,6 +10,9 @@
 
 void Tra_Cuu_Sach(char* title, char* author);
 void Muon_Sach(char* id, char* title, char* author);
+void Tra_Cuu_Hang_Doi(char* title, char* author);
+void Dang_Ky_Hang_Doi(char* id,char* title,char* author);
+void Dang_Ky_Thanh_Vien(char* id);
 
 void UserUI() {
     int choice;
@@ -60,9 +63,7 @@ void UserUI() {
                 }
                 break;
             case 6:
-                printf("Nhap tieu de sach: "); fgets(title, 200, stdin); title[strcspn(title, "\n")] = '\0';
-                printf("Nhap ten tac gia: "); fgets(author, 200, stdin); author[strcspn(author, "\n")] = '\0';
-                traverse(title, author);
+                Tra_Cuu_Hang_Doi(title,author);
                 break;
             case 7:
                 Dang_Ky_Thanh_Vien(id);
@@ -94,7 +95,7 @@ void Tra_Cuu_Sach(char* title, char* author){
             printf("Ten sach: %s\nTen tac gia: %s\n",
             book->Title, book->Author);
         }
-        printf("Ban co muon tiep tuc Tra Cuu Sach ?\n(Nhap Y/y de tiep tuc, ky tu bat ky de thoat)");
+        printf("Ban co muon tiep tuc Tra Cuu Sach ?\n(Nhap Y/y de tiep tuc, ky tu bat ky de thoat): ");
         scanf("%c",&c);
     }while(c == 'Y' || c == 'y');
 }
@@ -109,7 +110,7 @@ void Muon_Sach(char* id, char* title, char* author) {
 
     // Kiểm tra thành viên có tồn tại hay không 
     if (member == NULL){
-        printf("Ban chua dang ky thanh vien, vui long dang ký thanh vien de co the muon sach\n");
+        printf("Ban chua dang ky thanh vien, vui long dang ky thanh vien de co the muon sach\n");
         system("PAUSE");
         return;
     }
@@ -127,7 +128,7 @@ void Muon_Sach(char* id, char* title, char* author) {
 
     // Kiểm tra sach có tồn tại hay không
     if (book == NULL){
-        printf("Sach ban dang tim khong ton tại, vui long tra cuu ky truoc khi muon\n");
+        printf("Sach ban dang tim khong ton tai, vui long tra cuu ky truoc khi muon\n");
         system("PAUSE");
         return;
     }
@@ -150,6 +151,7 @@ void Muon_Sach(char* id, char* title, char* author) {
     }
     // Kiểm tra lại tỏng hàng đợi có ai chưa có sách được ấn đinh không
     if (book->Quantity > 0){
+        time_t t = time(NULL);
         struct tm t2 = *localtime(&t);
         queue = book->queue1;
         while(queue != NULL && book->Quantity > 0){
@@ -170,7 +172,7 @@ void Muon_Sach(char* id, char* title, char* author) {
     }
     // Kiểm tra số lượng sách còn lại
     if (book->Quantity == 0){
-        printf("Hien thu vien da het dau sach nay\nNeu ban muon dang ky hang doi, vui long chọn "Dang ky vao hang doi" o giao dien");
+        printf("Hien thu vien da het dau sach nay\nNeu ban muon dang ky hang doi, vui long chọn 'Dang ky vao hang doi' o giao dien");
         system("PAUSE");
         return;
     }
@@ -186,6 +188,30 @@ void Muon_Sach(char* id, char* title, char* author) {
     return;
 }
 
+/* TRA CỨU HÀNG ĐỢI */
+void Tra_Cuu_Hang_Doi(char* title, char* author){
+    char c = '\0';
+    do{
+        if (c != '\0')
+            getchar();
+        ClearScreen();
+        printf("========== TRA CUU HANG DOI ==========\n");
+        printf("Nhap tieu de sach: "); fgets(title, 200, stdin); title[strcspn(title, "\n")] = '\0';
+        printf("Nhap ten tac gia: "); fgets(author, 200, stdin); author[strcspn(author, "\n")] = '\0';
+        Book* book = searchBook(title,author);
+        if (book == NULL){
+            printf("Khong tim thay sach\n");
+        }
+        else{
+            printf("Da tim thay sach:\n");
+            printf("Ten sach: %s\nTen tac gia: %s\n",
+            book->Title, book->Author);
+            traverse(title, author);
+        }
+        printf("Ban co muon tiep tuc Tra Cuu Hang Doi?\n(Nhap Y/y de tiep tuc, ky tu bat ky de thoat): ");
+        scanf("%c",&c);
+    }while(c == 'Y' || c == 'y');
+}
 /* ĐĂNG KÝ VAO HÀNG ĐỢI */
 void Dang_Ky_Hang_Doi(char* id,char* title,char* author){
     ClearScreen();
@@ -229,6 +255,7 @@ void Dang_Ky_Hang_Doi(char* id,char* title,char* author){
     system("PAUSE");
     return;
 }
+
 /* ĐĂNG KÝ THÀNH VIÊN */
 void Dang_Ky_Thanh_Vien(char* id){
     ClearScreen();
@@ -238,7 +265,7 @@ void Dang_Ky_Thanh_Vien(char* id){
     Member* member = SearchMember(id);
 
     // Kiểm tra thành viên có tồn tại hay không 
-    if (member == NULL){
+    if (member != NULL){
         printf("Ban da dang ky thanh vien, vui long chon dich vu khac\n");
         system("PAUSE");
         return;
@@ -247,10 +274,10 @@ void Dang_Ky_Thanh_Vien(char* id){
     strcpy(member->IdentifyID, id);
     
     printf("Nhap Ho va Ten: ");
-    fget(member->Name,199,stdin); id[strcspn(id, "\n")] = '\0';
+    fgets(member->Name,199,stdin); id[strcspn(id, "\n")] = '\0';
     
     InputMember(member);
     printf("Da them thanh vien thanh cong\n");
     system("PAUSE");
-    return
+    return;
 }
