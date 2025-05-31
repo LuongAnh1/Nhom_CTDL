@@ -36,5 +36,7 @@ void deleteBorrowingTicket(char* code);
 void inorderWriteBorrowing(FILE *file, AVLNode *node);
 // Ghi dữ liệu bảng băm vào file borrowing.csv
 void storeBorrowing(const char *filename);
+// Hàm hiển thị tất cả phiếu mượn 
+void displayAllBorrowing();
 
 #endif

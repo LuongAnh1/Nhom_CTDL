@@ -44,6 +44,7 @@ void AdminUI() {
     } while (choice != 0);
 }
 
+/* QUẢN LÝ SÁCH */
 void menuBooks() {
     int choice;
     char title[200], author[200];
@@ -80,8 +81,15 @@ void menuBooks() {
             case 3:
                 printf("Nhap tieu de: "); fgets(title, 200, stdin); title[strcspn(title, "\n")] = '\0';
                 printf("Nhap tac gia: "); fgets(author, 200, stdin); author[strcspn(author, "\n")] = '\0';
-                deleteBook(title, author);
-                printf("Da xoa sach (neu ton tai).\n");
+                Book* book = searchBook(title,author);
+                if (book == NULL)
+                    printf("Sach khong ton tai\n");
+                else if (book->queue0 != NULL || book->queue1 != NULL)
+                    printf("Hang doi van con nguoi, khong the xoa sach\n");
+                else{
+                    deleteBook(title, author);
+                    printf("Da xoa sach\n");
+                }
                 break;
             case 4:
                 displayAllBooks();
@@ -91,10 +99,11 @@ void menuBooks() {
             default:
                 printf("Lua chon khong hop le.\n");
         }
-        system("pause");
+        system("PAUSE");
     } while (choice != 0);
 }
 
+/* QUẢN LÝ THÀNH VIÊN */
 void menuMembers() {
     int choice;
     Member member;
@@ -141,6 +150,7 @@ void menuMembers() {
     } while (choice != 0);
 }
 
+/* QUẢN LÝ MƯỢN SÁCH */
 void menuBorrowing() {
     int choice;
     char code[7], id[13], title[200], author[200];
@@ -150,9 +160,8 @@ void menuBorrowing() {
     do {
         ClearScreen();
         printf("========== QUAN LY MUON/TRA SACH ==========\n");
-        printf("1. Tao phieu muon\n");
-        printf("2. Tim phieu muon\n");
-        printf("3. Tra sach\n");
+        printf("1. Danh sach muon\n");
+        printf("2. Cac sach da duoc tra\n");
         printf("0. Quay lai\n");
         printf("Lua chon: ");
         scanf("%d", &choice);
@@ -160,26 +169,25 @@ void menuBorrowing() {
 
         switch (choice) {
             case 1:
-                printf("Nhap CCCD: "); fgets(id, 13, stdin); id[strcspn(id, "\n")] = '\0';
-                printf("Nhap tieu de: "); fgets(title, 200, stdin); title[strcspn(title, "\n")] = '\0';
-                printf("Nhap tac gia: "); fgets(author, 200, stdin); author[strcspn(author, "\n")] = '\0';
-                createBorrowingTicket(id, title, author, now);
-                printf("Da tao phieu muon.\n");
+                displayAllBorrowing();
                 break;
             case 2:
-                printf("Nhap ma phieu: "); fgets(code, 7, stdin); code[strcspn(code, "\n")] = '\0';
-                AVLNode *ticket = searchBorrowingTicket(code);
-                if (ticket) {
-                    Borrowing *b = (Borrowing *)ticket->data;
-                    printf("Ma: %s | CCCD: %s | Sach: %s - %s\n", b->Code, b->IdentifyID, b->Title, b->Author);
-                } else {
-                    printf("Khong tim thay phieu muon.\n");
+                FILE *f = fopen("data/returned.csv","r");
+                if (!f) {
+                    printf("Khong the mo file returned.csv de doc!\n");
+                    return;
                 }
-                break;
-            case 3:
-                printf("Nhap ma phieu muon: "); fgets(code, 7, stdin); code[strcspn(code, "\n")] = '\0';
-                deleteBorrowingTicket(code);
-                printf("Da tra sach.\n");
+                char line[500];
+                printf("%s | %s | %s | %s | %s | %s\n",
+                "Code", "CCCD", "Tieu de", "Tac gia", "Ngay muon", "Ngay tra");
+                while (fgets(line, sizeof(line), f)){
+                    char *p = line;
+                    while (*p) {
+                        if (*p == ';') *p = '|';
+                        p++;
+                    }
+                    printf("%s\n", line);
+                }
                 break;
             case 0:
                 return;

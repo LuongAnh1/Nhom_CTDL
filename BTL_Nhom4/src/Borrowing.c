@@ -168,7 +168,27 @@ void deleteBorrowingTicket(char* code) {
     HashTableBorrowing[index] = deleteAVL(HashTableBorrowing[index], code, compareString);
     printf("Tra sach thanh cong\n");
 }
+// Hàm duyệt AVL để hiển thị danh sách mượn 
+void printBorrowing(Borrowing* borrow) {
+    printf("%-7s | %-13s | %-40s | %-40s | %02d/%02d/%d\n",borrow->Code ,borrow->IdentifyID
+        ,borrow->Title, borrow->Author
+        ,borrow->Start.tm_mday, borrow->Start.tm_mon + 1, borrow->Start.tm_year + 1900);
+}
 
+void traverseAVLBorrowing(AVLNode *root, void (*visit)(Borrowing *)) {
+    if (!root) return;
+    traverseAVLBorrowing(root->left, visit);
+    visit((Borrowing *)root->data);
+    traverseAVLBorrowing(root->right, visit);
+}
+// Hàm hiển thị tất cả phiếu mượn 
+void displayAllBorrowing() {
+    printf("%-7s | %-13s | %-40s | %-40s | %-13s\n", "Code", "CCCD", "Tieu de", "Tac gia", "Ngay muon");
+    printf("----------------------------------------------------------------------------------------------------------------\n");
+    for (int i = 0; i < TABLE_SIZE; ++i) {
+        traverseAVLBorrowing(HashTableBorrowing[i], printBorrowing);
+    }
+}
 // Duyệt và ghi dữ liệu bảng băm vào file borrowing.csv theo chiều rộng 
 typedef struct queue{
     AVLNode* node;
