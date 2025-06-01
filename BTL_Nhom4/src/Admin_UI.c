@@ -124,8 +124,12 @@ void menuMembers() {
                 printf("Nhap CCCD: "); fgets(member.IdentifyID, 13, stdin); member.IdentifyID[strcspn(member.IdentifyID, "\n")] = '\0';
                 printf("Nhap ten: "); fgets(member.Name, 100, stdin); member.Name[strcspn(member.Name, "\n")] = '\0';
                 member.CurrentQuantity = 0;
-                InputMember(&member);
-                printf("Da them thanh vien.\n");
+                if (SearchMember(member.IdentifyID) != NULL)
+                    printf("Thanh vien da ton tai.\n");
+                else{
+                    InputMember(&member);
+                    printf("Da them thanh vien.\n");
+                }
                 break;
             case 2:
                 printf("Nhap CCCD: ");

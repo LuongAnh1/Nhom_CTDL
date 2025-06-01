@@ -139,7 +139,8 @@ void Muon_Sach(char* id, char* title, char* author) {
         system("PAUSE");
         return;
     }
-    // Kiểm tra có ai trong hàng đợi đã được ấn định mà chưa đến lấy sau 3 ngày 
+
+    // Kiểm tra có ai trong hàng đợi đã được ấn định mà chưa đến lấy sau 77 ngày 
     Queue* queue = getfront(book); // Lấy thông tin người đầu tiên trong hàng đợi
     if (queue != NULL){
         time_t t = time(NULL);
@@ -155,6 +156,39 @@ void Muon_Sach(char* id, char* title, char* author) {
             }
             else break;
         }while(queue != NULL);
+    }
+    // Kiểm tra hàng đợi, nếu khách hàng đã đặt trước thì tạo phiếu luôn 
+    queue = book->queue1;
+    while (queue != NULL){
+        if(strcmp(queue->IdentifyID, id) == 0){
+            struct tm now;
+            printf("Nhap ngay, thang, nam dang ky muon sach:\n(Yeu cau nhap dung theo cau truc ngay/thang/nam)\n");
+            scanf("%d/%d/%d", &now.tm_mday, &now.tm_mon, &now.tm_year);
+            now.tm_mon = now.tm_mon -1;
+            now.tm_year = now.tm_year - 1900;
+            createBorrowingTicket(id, title, author, now);
+            printf("Ban da muon sach thanh cong!!\n");
+            printf("Ma muon sach cua ban la: %s\n",currentCode);
+            system("PAUSE");
+            return;
+        }
+        queue = queue->next;  
+    }
+    queue = book->queue1;
+    while (queue != NULL){
+        if(strcmp(queue->IdentifyID, id) == 0){
+            struct tm now;
+            printf("Nhap ngay, thang, nam dang ky muon sach:\n(Yeu cau nhap dung theo cau truc ngay/thang/nam)\n");
+            scanf("%d/%d/%d", &now.tm_mday, &now.tm_mon, &now.tm_year);
+            now.tm_mon = now.tm_mon -1;
+            now.tm_year = now.tm_year - 1900;
+            createBorrowingTicket(id, title, author, now);
+            printf("Ban da muon sach thanh cong!!\n");
+            printf("Ma muon sach cua ban la: %s\n",currentCode);
+            system("PAUSE");
+            return;
+        }
+        queue = queue->next;  
     }
     // Kiểm tra lại trong hàng đợi có ai chưa có sách được ấn đinh không
     if (book->Quantity > 0){
