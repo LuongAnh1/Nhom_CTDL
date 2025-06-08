@@ -140,7 +140,7 @@ void Muon_Sach(char* id, char* title, char* author) {
         return;
     }
 
-    // Kiểm tra có ai trong hàng đợi đã được ấn định mà chưa đến lấy sau 77 ngày 
+    // Kiểm tra có ai trong hàng đợi đã được ấn định mà chưa đến lấy sau 7 ngày 
     Queue* queue = getfront(book); // Lấy thông tin người đầu tiên trong hàng đợi
     if (queue != NULL){
         time_t t = time(NULL);
@@ -156,6 +156,12 @@ void Muon_Sach(char* id, char* title, char* author) {
             }
             else break;
         }while(queue != NULL);
+    }
+    // Kiểm tra số lượng sách còn lại
+    if (book->Quantity == 0){
+        printf("Hien thu vien da het dau sach nay\nNeu ban muon dang ky hang doi, vui long chọn 'Dang ky vao hang doi' o giao dien");
+        system("PAUSE");
+        return;
     }
     // Kiểm tra hàng đợi, nếu khách hàng đã đặt trước thì tạo phiếu luôn 
     queue = book->queue1;
@@ -191,7 +197,7 @@ void Muon_Sach(char* id, char* title, char* author) {
         queue = queue->next;  
     }
     // Kiểm tra lại trong hàng đợi có ai chưa có sách được ấn đinh không
-    if (book->Quantity > 0){
+    if (book->Quantity > 0 && book->Quantity!=0){
         time_t t = time(NULL);
         struct tm t2 = *localtime(&t);
         queue = book->queue1;
@@ -211,12 +217,7 @@ void Muon_Sach(char* id, char* title, char* author) {
             queue = queue->next;
         }
     }
-    // Kiểm tra số lượng sách còn lại
-    if (book->Quantity == 0){
-        printf("Hien thu vien da het dau sach nay\nNeu ban muon dang ky hang doi, vui long chọn 'Dang ky vao hang doi' o giao dien");
-        system("PAUSE");
-        return;
-    }
+    
     
     struct tm now;
     printf("Nhap ngay, thang, nam dang ky muon sach:\n(Yeu cau nhap dung theo cau truc ngay/thang/nam)\n");

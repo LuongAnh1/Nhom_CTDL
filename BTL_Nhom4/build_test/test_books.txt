@@ -1,2 +1,0 @@
-Book1;Author1;10
-Book2;Author2;5
